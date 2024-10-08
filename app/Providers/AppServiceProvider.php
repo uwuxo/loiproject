@@ -21,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if(config('app.env') === 'production') {
+            \URL::forceScheme('https');
+        }
         Paginator::useBootstrap();
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;

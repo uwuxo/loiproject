@@ -43,7 +43,7 @@ class LoginController extends Controller
     public function checkAlowedDay($user, $input){
         if($user && !empty($input)){
             $allowedDays = [];
-            $groups = $user->courses;
+            $groups = $user->courses()->where('status', 1)->get();
 
             foreach($groups as $group){
                 $room = $group->rooms()->where('name', $input)->first();

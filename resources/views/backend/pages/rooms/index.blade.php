@@ -24,6 +24,7 @@ Room - Admin Panel
                 <h4 class="page-title pull-left">Rooms</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ route('group.index') }}">Groups</a></li>
                     <li><span>All Rooms</span></li>
                 </ul>
             </div>

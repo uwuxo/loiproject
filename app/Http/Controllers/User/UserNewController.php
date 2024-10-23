@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Course;
+use Spatie\Permission\Models\Role;
 
 class UserNewController extends Controller
 {
@@ -29,10 +30,12 @@ class UserNewController extends Controller
     // Hiển thị form cập nhật
     public function edit($id)
     {
+        //$this->checkAuthorization(auth()->user(), ['admin.view']);
         $user = User::find($id);
         $groups = Course::select('id','name')->get();
+        $roles = Role::all();
         //$allowed_days = json_decode($user->allowed_days, true); // Lấy danh sách các ngày mà user được phép đăng nhập
-        return view('backend.pages.users.edit', compact('user','groups'));
+        return view('backend.pages.users.edit', compact('user','groups','roles'));
     }
 
     // Xử lý việc cập nhật thông tin
@@ -68,6 +71,11 @@ class UserNewController extends Controller
         $user->save();
 
         $user->courses()->sync($request->groups);
+
+        $user->roles()->detach();
+        if ($request->roles) {
+            $user->assignRole($request->roles);
+        }
 
         // Redirect với thông báo thành công
         return redirect()->route('users.index')->with('success', 'Profile updated successfully!');

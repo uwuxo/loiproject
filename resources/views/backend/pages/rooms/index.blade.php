@@ -43,7 +43,9 @@ Room - Admin Panel
                 <div class="card-body">
                     <h4 class="header-title float-left">{{ $course->name }} - Rooms List</h4>
                     <p class="float-right mb-2">
+                        @hasanyrole('super-admin|group-admin')
                         <a class="btn btn-primary text-white" href="{{ route('room.add', $course->id) }}">Create New Room</a>
+                        @endhasanyrole
                     </p>
                     <div class="clearfix"></div>
                     <div class="data-tables">
@@ -52,14 +54,18 @@ Room - Admin Panel
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="10%">Name</th>
+                                    <th width="10%">Time</th>
                                     <th width="20%">Allowed days</th>
+                                    @hasanyrole('super-admin|group-admin')
                                     <th width="15%">Action</th>
+                                    @endhasanyrole
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($rooms as $room)
                                <tr>
                                     <td>{{ $room->name }}</td>
+                                    <td>Start time: ({{ $room->start_time }}) <br/> End time: ({{ $room->end_time }})</td>
                                     <td>
                                         @php
                                         $allowed_days = [];
@@ -89,6 +95,7 @@ Room - Admin Panel
                                         @endif
                                         @endif
                                     </td>
+                                    @hasanyrole('super-admin|group-admin')
                                     <td>
                                         <a class="btn btn-success text-white" href="{{ route('room.edit', $room->id) }}">Edit</a>
                                         
@@ -115,6 +122,7 @@ Room - Admin Panel
                                             });
                                         </script>
                                     </td>
+                                    @endhasanyrole
                                 </tr>
                                @endforeach
                             </tbody>

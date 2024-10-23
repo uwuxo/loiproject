@@ -93,6 +93,18 @@ User Edit - Admin Panel
                                 </select>
                             </div>
                         </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label for="password">Roles</label>
+                                
+                                <select name="roles[]" id="roles" class="form-control select2" multiple>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         
                         <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save User</button>
                         <a href="{{ route('users.index') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>

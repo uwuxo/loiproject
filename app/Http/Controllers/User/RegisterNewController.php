@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+//use Spatie\Permission\Models\Permission;
 
 use App\Models\Course;
 
@@ -15,7 +17,8 @@ class RegisterNewController extends Controller
 {
     public function registerShow(){
         $groups = Course::select('id','name')->get();
-        return view('backend.pages.users.create', compact('groups'));
+        $roles = Role::all();
+        return view('backend.pages.users.create', compact('groups','roles'));
     }
 
     public function register(Request $request)
@@ -43,9 +46,13 @@ class RegisterNewController extends Controller
         if($user && !empty($request->groups)){
             $user->courses()->attach($request->groups);
         }
+        
+        if($user && !empty($request->roles)){
+        $user->assignRole($request->roles);
+        }
 
         if(Auth::user()->super){
-            return redirect()->route('users.index')->with('success', 'Profile Create successful.');
+            return redirect()->route('users.index')->with('success', 'Profile create successful.');
         }else
         return redirect()->route('users.login')->with('success', 'Registration successful! You can now log in.');
         // Redirect or login the user

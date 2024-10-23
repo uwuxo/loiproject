@@ -43,7 +43,9 @@ Users - Admin Panel
                 <div class="card-body">
                     <h4 class="header-title float-left">Users List</h4>
                     <p class="float-right mb-2">
+                        @hasanyrole('super-admin|user-admin')
                         <a class="btn btn-primary text-white" href="{{ route('user.register') }}">Create New User</a>
+                        @endhasanyrole
                     </p>
                     <div class="clearfix"></div>
                     <div class="data-tables">
@@ -51,12 +53,17 @@ Users - Admin Panel
                         <table>
                             <thead class="bg-light text-capitalize">
                                 <tr>
-                                    <th width="10%">Name</th>
+                                    <th width="15%">Name</th>
                                     <th width="10%">Username</th>
-                                    <th width="10%">Email</th>
-                                    <th width="10%">Status</th>
+                                    <th width="15%">Email</th>
+                                    <th width="5%">Status</th>
+                                    @hasanyrole('super-admin|user-admin|user-edit')
+                                    <th width="10%">Roles</th>
+                                    @endhasanyrole
                                     <th width="10%">Created At</th>
-                                    <th width="15%">Action</th>
+                                    @hasanyrole('super-admin|user-admin|user-edit')
+                                    <th width="10%">Action</th>
+                                    @endhasanyrole
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,14 +74,25 @@ Users - Admin Panel
                                     <td>{{ $user->email }}</td>
                                     <td>
                                         @if ($user->status)
-                                            <span class="alert-success">active</span>
+                                            <span class="badge badge-success">active</span>
                                         @else
-                                            <span class="alert-danger">inactive</span>
+                                            <span class="badge badge-danger">inactive</span>
                                         @endif
                                     </td>
+                                    @hasanyrole('super-admin|user-admin|user-edit')
+                                    <td>
+                                        @foreach ($user->roles as $role)
+                                            <span class="badge badge-info mr-1">
+                                                {{ $role->name }}
+                                            </span>
+                                        @endforeach 
+                                    </td>
+                                    @endhasanyrole
                                     <td>{{ $user->created_at->format('d-m-Y H:i:s') }}</td>
+                                    @hasanyrole('super-admin|user-admin|user-edit')
                                     <td>
                                         <a class="btn btn-success text-white" href="{{ route('user.edit', $user->id) }}">Edit</a>
+                                        @hasanyrole('super-admin|user-admin')
                                         @if (!$user->super)
                                         <a class="btn btn-danger text-white" href="#" id="submitBtn{{ $user->id}}">
                                             Delete
@@ -102,7 +120,9 @@ Users - Admin Panel
                                         </script>
                                         @endif
                                         @endif
+                                        @endhasanyrole
                                     </td>
+                                    @endhasanyrole
                                 </tr>
                                @endforeach
                             </tbody>

@@ -31,6 +31,7 @@ Dashboard Page - Admin Panel
   <div class="row">
     <div class="col-lg-8">
         <div class="row">
+            @hasanyrole('super-admin|group-admin|group-edit|group-view')
             <div class="col-md-6 mt-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg1">
@@ -43,6 +44,8 @@ Dashboard Page - Admin Panel
                     </div>
                 </div>
             </div>
+            @endhasanyrole
+            @hasanyrole('super-admin|user-admin|user-edit|user-view')
             <div class="col-md-6 mt-md-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg2">
@@ -55,6 +58,21 @@ Dashboard Page - Admin Panel
                     </div>
                 </div>
             </div>
+            @endhasanyrole
+            @hasanyrole('super-admin')
+            <div class="col-md-6 mt-md-5 mb-3">
+                <div class="card">
+                    <div class="seo-fact sbg3">
+                        <a href="#">
+                            <div class="p-4 d-flex justify-content-between align-items-center">
+                                <div class="seofct-icon"><i class="fa fa-user"></i> Longin Users</div>
+                                <h2>xxx</h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endhasanyrole
         </div>
     </div>
   </div>

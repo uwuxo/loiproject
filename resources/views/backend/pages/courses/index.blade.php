@@ -43,7 +43,9 @@ Groups - Admin Panel
                 <div class="card-body">
                     <h4 class="header-title float-left">Groups List</h4>
                     <p class="float-right mb-2">
+                        @hasanyrole('super-admin|group-admin')
                         <a class="btn btn-primary text-white" href="{{ route('group.create') }}">Create New Group</a>
+                        @endhasanyrole
                     </p>
                     <div class="clearfix"></div>
                     <div class="data-tables">
@@ -53,9 +55,12 @@ Groups - Admin Panel
                                 <tr>
                                     <th width="10%">Name</th>
                                     <th width="20%">Rooms</th>
-                                    <th width="10%">Status</th>
+                                    <th width="15%">Time</th>
+                                    <th width="5%">Status</th>
                                     <th width="10%">Created At</th>
-                                    <th width="15%">Action</th>
+                                    @hasanyrole('super-admin|group-admin|group-edit')
+                                    <th width="10%">Action</th>
+                                    @endhasanyrole
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,16 +78,21 @@ Groups - Admin Panel
                                         @endif
                                     </td>
                                     <td>
+                                        <p>Start date: ({{ Carbon\Carbon::parse($group->start_date)->format('m/d/Y') }})</p>
+                                        <p>End date: ({{ Carbon\Carbon::parse($group->end_date)->format('m/d/Y') }})</p>
+                                    </td>
+                                    <td>
                                         @if ($group->status)
-                                            <span class="alert-success">active</span>
+                                            <span class="badge badge-success">active</span>
                                         @else
-                                            <span class="alert-danger">inactive</span>
+                                            <span class="badge badge-danger">inactive</span>
                                         @endif
                                     </td>
                                     <td>{{ $group->created_at->format('d-m-Y H:i:s') }}</td>
+                                    @hasanyrole('super-admin|group-admin|group-edit')
                                     <td>
                                         <a class="btn btn-success text-white" href="{{ route('group.edit', $group->id) }}">Edit</a>
-                                        
+                                        @hasanyrole('super-admin|group-admin')
                                         <a class="btn btn-danger text-white" href="#" id="submitBtn{{ $group->id}}">
                                             Delete
                                         </a>
@@ -105,7 +115,9 @@ Groups - Admin Panel
                                                 }
                                             });
                                         </script>
+                                        @endhasanyrole
                                     </td>
+                                    @endhasanyrole
                                 </tr>
                                @endforeach
                             </tbody>

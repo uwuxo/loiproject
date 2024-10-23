@@ -18,22 +18,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            'name' => 'Super Admin',
-            'username' => 'phantanloi',
-            'email' => 'phantanloi@admin.com',
-            'password' => Hash::make('loiprosotrue'),
-            'super' => true,
-            'status' => true,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+        // DB::table('users')->insert([
+        //     'name' => 'Super Admin',
+        //     'username' => 'phantanloi',
+        //     'email' => 'phantanloi@admin.com',
+        //     'password' => Hash::make('loiprosotrue'),
+        //     'super' => true,
+        //     'status' => true,
+        //     'created_at' => Carbon::now(),
+        //     'updated_at' => Carbon::now(),
+        // ]);
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
         Permission::create(['name' => 'view']);
-        Permission::create(['name' => 'admin']);
+        Permission::create(['name' => 'public']);
+        Permission::create(['name' => 'edit']);
+        Permission::create(['name' => 'delete']);
 
         // update cache to know about the newly created permissions (required if using WithoutModelEvents in seeders)
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
@@ -42,14 +44,26 @@ class DatabaseSeeder extends Seeder
         // create roles and assign created permissions
 
         // this can be done as separate statements
-        $role = Role::create(['name' => 'guests']);
+        $role = Role::create(['name' => 'group-admin']);
+        $role->givePermissionTo(Permission::all());
+        $role = Role::create(['name' => 'group-view']);
         $role->givePermissionTo('view');
+        $role = Role::create(['name' => 'group-edit']);
+        $role->givePermissionTo(['edit','view']);
+
+        // this can be done as separate statements
+        $role = Role::create(['name' => 'user-admin']);
+        $role->givePermissionTo(Permission::all());
+        $role = Role::create(['name' => 'user-view']);
+        $role->givePermissionTo('view');
+        $role = Role::create(['name' => 'user-edit']);
+        $role->givePermissionTo(['edit','view']);
 
         $role = Role::create(['name' => 'super-admin']);
         $role->givePermissionTo(Permission::all());
 
         $superadmin = User::find(1);
 
-        $superadmin->assignRole('super-admin');
+        $superadmin->assignRole(Role::all());
     }
 }

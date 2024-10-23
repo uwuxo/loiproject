@@ -36,17 +36,21 @@ class RoomController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:rooms',
+            'start_time' => 'required',
+            'end_time' => 'required',
         ]);
         $course = Course::find($id);
         $allowedDays = json_encode($request->allowed_days);
         $room = $course->rooms()->create(
             [
                 'name' => $request->name,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
                 'allowed_days' => $allowedDays
             ]
         );
 
-        return redirect()->route('rooms', ['id' => $id])->with('success', 'Room Create successful.');
+        return redirect()->route('rooms', ['id' => $id])->with('success', 'Room create successful.');
     }
 
     /**
@@ -70,6 +74,8 @@ class RoomController extends Controller
         // Validate dữ liệu
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:25|unique:rooms,name,' . $room->id,
+            'start_time' => 'required',
+            'end_time' => 'required',
             'allowed_days' => 'required|array',
         ]);
 
@@ -79,6 +85,8 @@ class RoomController extends Controller
 
         // Cập nhật thông tin người dùng
         $room->name = $request->name;
+        $room->start_time = $request->start_time;
+        $room->end_time = $request->end_time;
         $room->allowed_days = json_encode($request->allowed_days);
         $room->save();
 

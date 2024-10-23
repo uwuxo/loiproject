@@ -10,6 +10,47 @@ Room Edit - Admin Panel
     .form-check-label {
         text-transform: capitalize;
     }
+    .custom-time-picker {
+            position: relative;
+        }
+        .time-picker-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .time-picker-popup.show {
+            display: block;
+        }
+        .time-section {
+            display: inline-block;
+            text-align: center;
+            padding: 0 10px;
+        }
+        .time-control {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .time-btn {
+            display: block;
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .time-btn:hover {
+            background-color: #f0f0f0;
+        }
 </style>
 @endsection
 
@@ -51,6 +92,13 @@ Room Edit - Admin Panel
                             <div class="form-group col-md-6 col-sm-12">
                                 <label for="name">Room Name</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $room->name) }}" required>
+                            
+                                <div class="form-group mt-5">
+                                    <label for="name">Start Time</label>
+                                    <input type="time" class="datepicker" id="start_time" name="start_time" value="{{ $room->start_time }}" required>
+                                    <label for="name">End Time</label>
+                                    <input type="time" class="datepicker" id="end_time" name="end_time" value="{{ $room->end_time }}" required>
+                                </div>
                             </div>
                             
                             <div class="form-group col-md-6 col-sm-12">

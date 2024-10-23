@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Course;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
@@ -43,11 +44,16 @@ class CourseController extends Controller
         // Validate form
         $request->validate([
             'name' => 'required|string|max:255',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
         $group = Course::create([
             'name' => $request->name,
+            'description' => $request->description,
             'status' => $request->status,
+            'start_date' => Carbon::parse($request->start_date)->format('Y-m-d'),
+            'end_date' => Carbon::parse($request->end_date)->format('Y-m-d')
         ]);
         
         if($group && !empty($request->users)){
@@ -65,6 +71,8 @@ class CourseController extends Controller
         // Validate dữ liệu
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -73,7 +81,10 @@ class CourseController extends Controller
 
         // Cập nhật thông tin người dùng
         $group->name = $request->name;
+        $group->description = $request->description;
         $group->status = $request->status;
+        $group->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $group->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
         $group->save();
 
         $group->users()->sync($request->users);

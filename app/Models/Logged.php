@@ -11,7 +11,7 @@ class Logged extends Model
 
     protected $fillable = [
         'room_id',
-        'user_id'
+        'user_id',
     ];
 
     public function room()

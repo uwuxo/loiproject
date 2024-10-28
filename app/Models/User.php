@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class);
     }
 
+    public Function  rooms(): BelongsToMany
+    {
+        return $this->belongsToMany(Room::class);
+    }
+
     public Function  logged(){
         return $this->hasMany(Logged::class);
     }

@@ -13,4 +13,8 @@ class Room extends Model
     public function  course() {
         return $this->belongsTo(Course::class);
     }
+
+    public function  logged() {
+        return $this->hasMany(Logged::class);
+    }
 }

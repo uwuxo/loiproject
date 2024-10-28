@@ -31,7 +31,7 @@ Dashboard Page - Admin Panel
   <div class="row">
     <div class="col-lg-8">
         <div class="row">
-            @hasanyrole('super-admin|group-admin|group-edit|group-view')
+            @hasanyrole('super-admin|course-admin|course-edit|course-view')
             <div class="col-md-6 mt-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg1">
@@ -59,7 +59,7 @@ Dashboard Page - Admin Panel
                 </div>
             </div>
             @endhasanyrole
-            @hasanyrole('super-admin')
+            @hasanyrole('super-admin|course-admin|course-edit|course-view|user-admin|user-edit|user-view')            
             <div class="col-md-6 mt-md-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg3">

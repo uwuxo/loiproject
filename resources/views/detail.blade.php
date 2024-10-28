@@ -12,6 +12,9 @@ Home | Security card project
             <div class="breadcrumbs-area clearfix">
                 <h4 class="page-title pull-left">Home</h4>
                 <ul class="breadcrumbs pull-left">
+                    @hasanyrole('super-admin|course-admin|course-edit|course-view|user-admin|user-edit|user-view')
+                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    @endhasanyrole
                     <li><span>{{ auth()->user()->type }}</span></li>
                 </ul>
             </div>

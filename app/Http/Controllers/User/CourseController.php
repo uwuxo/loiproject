@@ -52,8 +52,8 @@ class CourseController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
-            'start_date' => Carbon::parse($request->start_date)->format('Y-m-d'),
-            'end_date' => Carbon::parse($request->end_date)->format('Y-m-d')
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
         ]);
         
         if($group && !empty($request->users)){

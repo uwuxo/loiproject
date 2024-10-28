@@ -24,7 +24,6 @@ class LoginController extends Controller
                 "The credentials you entered are incorrect"
             ]);
         }
-        
         // if (!$user || !Hash::check($request->password, $user->password)) {
         //     throw ValidationException::withMessages([
         //         "The credentials you entered are incorrect"
@@ -35,9 +34,11 @@ class LoginController extends Controller
         $formattedDate['username'] = $user->username;
         $formattedDate['created_at'] = $user->created_at->format('d-m-Y H:i:s');
         $formattedDate['updated_at'] = $user->updated_at->format('d-m-Y H:i:s');
+
+        $token = $user->createToken('laraval_api_token')->plainTextToken;
         return response()->json([
             'user' => $formattedDate,
-            'token' => $user->createToken('laraval_api_token')->plainTextToken
+            'token' => $token
         ]);
     }
 
@@ -45,18 +46,17 @@ class LoginController extends Controller
         if($user && !empty($input)){
             $allowedDays = [];
             $groups = $user->courses()->where('status', 1)->get();
-
             foreach($groups as $group){
                 $room = $group->rooms()->where('name', $input)->first();
                 if($room){
-                    Logged::create([
-                        'user_id' => $user->id, 
-                        'room_id' => $room->id, 
-                        'created_at' => Carbon::now()
-                    ]);
                     $allowedDays = json_decode($room->allowed_days, true);
                     $currentDay = Carbon::now()->dayOfWeek; 
                     if (in_array($currentDay, $allowedDays)) {
+                        $room->logged()->create([
+                            'user_id' => $user->id,
+                            'room_id' => $room->id,
+                            'created_at' => Carbon::now()
+                        ]);
                         return true;
                     }
                 }

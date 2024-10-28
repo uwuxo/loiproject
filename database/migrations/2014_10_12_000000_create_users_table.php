@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('username');
+            $table->string('type');
             $table->string('email')->unique();
             $table->integer('super')->default(0);
             $table->integer('status')->default(1);

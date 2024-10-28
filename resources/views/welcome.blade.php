@@ -40,7 +40,7 @@
         </a>
             @else
             {{ Auth::user()->name }}
-            <a href="{{ route('show.user') }}" class="btn btn-success btn-custom"><i class="bi bi-person"></i> My Profile</a>
+            <a href="{{ route('home') }}" class="btn btn-success btn-custom"><i class="bi bi-person"></i> Home page</a>
             @if (Auth::user()->super)
                 <a href="{{ url('/admin/register') }}" class="btn btn-success btn-custom"><i class="bi bi-person-plus"></i> Create User</a>
                 <a href="{{ route('dashboard') }}" class="btn btn-primary btn-custom"><i class="bi bi-tools"></i> Dashboard</a>

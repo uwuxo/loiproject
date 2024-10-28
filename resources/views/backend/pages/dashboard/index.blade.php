@@ -15,7 +15,7 @@ Dashboard Page - Admin Panel
             <div class="breadcrumbs-area clearfix">
                 <h4 class="page-title pull-left">Dashboard</h4>
                 <ul class="breadcrumbs pull-left">
-                    <li><a href="{{ route('welcome') }}">Home</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li><span>Dashboard</span></li>
                 </ul>
             </div>
@@ -37,7 +37,7 @@ Dashboard Page - Admin Panel
                     <div class="seo-fact sbg1">
                         <a href="{{ route('group.index') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
-                                <div class="seofct-icon"><i class="fa fa-users"></i> Groups</div>
+                                <div class="seofct-icon"><i class="fa fa-users"></i> Courses</div>
                                 <h2>{{ $total_groups }}</h2>
                             </div>
                         </a>
@@ -63,10 +63,10 @@ Dashboard Page - Admin Panel
             <div class="col-md-6 mt-md-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg3">
-                        <a href="#">
+                        <a href="{{ route('logged') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
-                                <div class="seofct-icon"><i class="fa fa-user"></i> Longin Users</div>
-                                <h2>xxx</h2>
+                                <div class="seofct-icon"><i class="fa fa-user"></i> Logged In Users API</div>
+                                <h2>{{ $loggedInUsers->count() }}</h2>
                             </div>
                         </a>
                     </div>

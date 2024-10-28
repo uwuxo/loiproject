@@ -18,7 +18,10 @@ class UserNewController extends Controller
         $user = Auth::user();
         $total_groups = Course::count();
         $total_users = User::count();
-        return view('backend.pages.dashboard.index',compact('total_groups','total_users'));
+        $loggedInUsers = User::whereHas('tokens', function ($query) {
+            $query->where('expires_at', '>=', now())->orWhereNull('expires_at');
+        })->get();
+        return view('backend.pages.dashboard.index',compact('total_groups','total_users','loggedInUsers'));
     }
     public function index()
     {
@@ -46,15 +49,13 @@ class UserNewController extends Controller
         // Validate dữ liệu
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'username' => 'required|max:25|unique:users,username,' . $user->id,
+            'username' => 'required|min:4|max:25|unique:users,username,' . $user->id,
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'type' => 'required',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        if($request->password){
-            $validator = Validator::make($request->all(), [
-                'password' => 'required|string|min:8',
-            ]);
-        }
+        
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -64,6 +65,7 @@ class UserNewController extends Controller
         $user->name = $request->name;
         $user->username = $request->username;
         $user->email = $request->email;
+        $user->type = $request->type;
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }

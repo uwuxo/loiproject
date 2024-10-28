@@ -38,6 +38,7 @@ class RoomController extends Controller
             'name' => 'required|string|max:255|unique:rooms',
             'start_time' => 'required',
             'end_time' => 'required',
+            'allowed_days' => 'required|array',
         ]);
         $course = Course::find($id);
         $allowedDays = json_encode($request->allowed_days);

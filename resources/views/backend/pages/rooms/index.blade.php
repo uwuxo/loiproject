@@ -24,7 +24,7 @@ Room - Admin Panel
                 <h4 class="page-title pull-left">Rooms</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('group.index') }}">Groups</a></li>
+                    <li><a href="{{ route('group.index') }}">Courses</a></li>
                     <li><span>All Rooms</span></li>
                 </ul>
             </div>
@@ -54,9 +54,10 @@ Room - Admin Panel
                         <table>
                             <thead class="bg-light text-capitalize">
                                 <tr>
-                                    <th width="10%">Name</th>
-                                    <th width="10%">Time</th>
-                                    <th width="20%">Allowed days</th>
+                                    <th width="30%">Name</th>
+                                    <th width="10%">Start time</th>
+                                    <th width="10%">End time</th>
+                                    <th width="30%">Allowed days</th>
                                     @hasanyrole('super-admin|group-admin')
                                     <th width="15%">Action</th>
                                     @endhasanyrole
@@ -66,7 +67,8 @@ Room - Admin Panel
                                 @foreach ($rooms as $room)
                                <tr>
                                     <td>{{ $room->name }}</td>
-                                    <td>Start time: ({{ $room->start_time }}) <br/> End time: ({{ $room->end_time }})</td>
+                                    <td>{{ $room->start_time }}</td>
+                                    <td>{{ $room->end_time }}</td>
                                     <td>
                                         @php
                                         $allowed_days = [];

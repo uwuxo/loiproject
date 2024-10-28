@@ -1,227 +1,235 @@
-
 @extends('backend.layouts.master')
 
 @section('title')
-Group Edit - Admin Panel
+Course Edit - Admin Panel
 @endsection
 
 @section('styles')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
-<style>
-.form-check-label {
-    text-transform: capitalize;
-}
-.datepicker-wrapper {
-    position: relative;
-}
+    <style>
+        .form-check-label {
+            text-transform: capitalize;
+        }
 
-.datepicker-popup {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: none;
-    width: 300px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
+        .datepicker-wrapper {
+            position: relative;
+        }
 
-.datepicker-popup.show {
-    display: block;
-}
+        .datepicker-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            width: 300px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
+        .datepicker-popup.show {
+            display: block;
+        }
 
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    text-align: center;
-}
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-.calendar-day {
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 4px;
-}
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            text-align: center;
+        }
 
-.calendar-day:hover {
-    background-color: #f0f0f0;
-}
+        .calendar-day {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
 
-.calendar-day.today {
-    background-color: #e9ecef;
-}
+        .calendar-day:hover {
+            background-color: #f0f0f0;
+        }
 
-.calendar-day.selected {
-    background-color: #0d6efd;
-    color: white;
-}
+        .calendar-day.today {
+            background-color: #e9ecef;
+        }
 
-.calendar-day.disabled {
-    color: #aaa;
-    cursor: not-allowed;
-}
+        .calendar-day.selected {
+            background-color: #0d6efd;
+            color: white;
+        }
 
-.weekday-header {
-    font-weight: bold;
-    padding: 8px;
-    background-color: #f8f9fa;
-}
-</style>
+        .calendar-day.disabled {
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .weekday-header {
+            font-weight: bold;
+            padding: 8px;
+            background-color: #f8f9fa;
+        }
+    </style>
 @endsection
 
 
 @section('admin-content')
-
-<!-- page title area start -->
-<div class="page-title-area">
-    <div class="row align-items-center">
-        <div class="col-sm-6">
-            <div class="breadcrumbs-area clearfix">
-                <h4 class="page-title pull-left">Group Edit</h4>
-                <ul class="breadcrumbs pull-left">
-                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('group.index') }}">All Group</a></li>
-                    <li><span>Edit Group - {{ $group->name }}</span></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-sm-6 clearfix">
-            @include('backend.layouts.partials.logout')
-        </div>
-    </div>
-</div>
-<!-- page title area end -->
-
-<div class="main-content-inner">
-    <div class="row">
-        <!-- data table start -->
-        <div class="col-12 mt-5">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">Edit Group - {{ $group->name }}</h4>
-                    @include('backend.layouts.partials.messages')
-                    
-                    <form action="{{ route('group.update', $group->id) }}" method="POST">
-                        @csrf
-                        <div class="form-row">
-                            <div class="form-group col-md-6 col-sm-12">
-                                <label for="name">Group Name</label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $group->name) }}" required>
-                            
-                                <div class="mt-5">
-                                    <label for="name">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $group->description) }}</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6 col-sm-12">
-                                <div class="mt-5">
-                                    <!-- Datepicker 1 -->
-                                    <div class="row mb-4">
-                                        <div class="col-md-6">
-                                            <div class="datepicker-wrapper">
-                                                <label class="form-label">Start Date</label>
-                                                <input type="text" id="start_date" name="start_date" class="form-control datepicker" readonly
-                                                    placeholder="DD/MM/YYYY" value="{{ Carbon\Carbon::parse($group->start_date)->format('m/d/Y') }}" required>
-                                                <div class="datepicker-popup">
-                                                    <div class="calendar-header">
-                                                        <button
-                                                            class="btn btn-sm btn-outline-secondary prev-month">&lt;</button>
-                                                        <div class="d-flex align-items-center">
-                                                            <select class="form-select form-select-sm me-2 month-select"
-                                                                style="width: auto;"></select>
-                                                            <select class="form-select form-select-sm year-select"
-                                                                style="width: auto;"></select>
-                                                        </div>
-                                                        <button
-                                                            class="btn btn-sm btn-outline-secondary next-month">&gt;</button>
-                                                    </div>
-                                                    <div class="calendar-grid"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-            
-                                    <!-- Datepicker 2 -->
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="datepicker-wrapper">
-                                                <label class="form-label">End Date</label>
-                                                <input type="text" id="end_date" name="end_date" class="form-control datepicker" readonly
-                                                    placeholder="DD/MM/YYYY" value="{{ Carbon\Carbon::parse($group->end_date)->format('m/d/Y') }}" required>
-                                                <div class="datepicker-popup">
-                                                    <div class="calendar-header">
-                                                        <button
-                                                            class="btn btn-sm btn-outline-secondary prev-month">&lt;</button>
-                                                        <div class="d-flex align-items-center">
-                                                            <select class="form-select form-select-sm me-2 month-select"
-                                                                style="width: auto;"></select>
-                                                            <select class="form-select form-select-sm year-select"
-                                                                style="width: auto;"></select>
-                                                        </div>
-                                                        <button
-                                                            class="btn btn-sm btn-outline-secondary next-month">&gt;</button>
-                                                    </div>
-                                                    <div class="calendar-grid"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-5">
-                                <label for="allowed_days" class="form-label">Status</label><br>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status" {{ $group->status ? 'checked' : '' }} value="1">
-                                    <label class="form-check-label" for="monday">Active</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="status" {{ !$group->status ? 'checked' : '' }} value="0">
-                                    <label class="form-check-label" for="tuesday">Inactive</label>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6 col-sm-12">
-                                <label for="password">Users</label>
-                                <select name="users[]" id="users" class="form-control select2" multiple>
-                                    @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" {{ in_array($user->id, $group->users->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save Group</button>
-                        <a href="{{ route('group.index') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
-                    </form>
+    <!-- page title area start -->
+    <div class="page-title-area">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <div class="breadcrumbs-area clearfix">
+                    <h4 class="page-title pull-left">Course Edit</h4>
+                    <ul class="breadcrumbs pull-left">
+                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                        <li><a href="{{ route('group.index') }}">All Courses</a></li>
+                        <li><span>Edit Course - {{ $group->name }}</span></li>
+                    </ul>
                 </div>
             </div>
+            <div class="col-sm-6 clearfix">
+                @include('backend.layouts.partials.logout')
+            </div>
         </div>
-        <!-- data table end -->
-        
     </div>
-</div>
+    <!-- page title area end -->
+
+    <div class="main-content-inner">
+        <div class="row">
+            <!-- data table start -->
+            <div class="col-12 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title">Edit Course - {{ $group->name }}</h4>
+                        @include('backend.layouts.partials.messages')
+
+                        <form action="{{ route('group.update', $group->id) }}" method="POST">
+                            @csrf
+                            <div class="form-row">
+                                <div class="form-group col-md-6 col-sm-12">
+                                    <label for="name">Course Name</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ old('name', $group->name) }}" required>
+
+                                    <div class="mt-5">
+                                        <label for="name">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $group->description) }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12">
+                                    <div class="mt-5">
+                                        <!-- Datepicker 1 -->
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <div class="datepicker-wrapper">
+                                                    <label class="form-label">Start Date</label>
+                                                    <input type="text" id="start_date" name="start_date"
+                                                        class="form-control datepicker" readonly placeholder="DD/MM/YYYY"
+                                                        value="{{ Carbon\Carbon::parse($group->start_date)->format('m/d/Y') }}"
+                                                        required>
+                                                    <div class="datepicker-popup">
+                                                        <div class="calendar-header">
+                                                            <button
+                                                                class="btn btn-sm btn-outline-secondary prev-month">&lt;</button>
+                                                            <div class="d-flex align-items-center">
+                                                                <select class="form-select form-select-sm me-2 month-select"
+                                                                    style="width: auto;"></select>
+                                                                <select class="form-select form-select-sm year-select"
+                                                                    style="width: auto;"></select>
+                                                            </div>
+                                                            <button
+                                                                class="btn btn-sm btn-outline-secondary next-month">&gt;</button>
+                                                        </div>
+                                                        <div class="calendar-grid"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Datepicker 2 -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="datepicker-wrapper">
+                                                    <label class="form-label">End Date</label>
+                                                    <input type="text" id="end_date" name="end_date"
+                                                        class="form-control datepicker" readonly placeholder="DD/MM/YYYY"
+                                                        value="{{ Carbon\Carbon::parse($group->end_date)->format('m/d/Y') }}"
+                                                        required>
+                                                    <div class="datepicker-popup">
+                                                        <div class="calendar-header">
+                                                            <button
+                                                                class="btn btn-sm btn-outline-secondary prev-month">&lt;</button>
+                                                            <div class="d-flex align-items-center">
+                                                                <select class="form-select form-select-sm me-2 month-select"
+                                                                    style="width: auto;"></select>
+                                                                <select class="form-select form-select-sm year-select"
+                                                                    style="width: auto;"></select>
+                                                            </div>
+                                                            <button
+                                                                class="btn btn-sm btn-outline-secondary next-month">&gt;</button>
+                                                        </div>
+                                                        <div class="calendar-grid"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5">
+                                        <label for="allowed_days" class="form-label">Status</label><br>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="status"
+                                                {{ $group->status ? 'checked' : '' }} value="1">
+                                            <label class="form-check-label" for="monday">Active</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="status"
+                                                {{ !$group->status ? 'checked' : '' }} value="0">
+                                            <label class="form-check-label" for="tuesday">Inactive</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6 col-sm-12">
+                                    <label for="password">Users</label>
+                                    <select name="users[]" id="users" class="form-control select2" multiple>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                {{ in_array($user->id, $group->users->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                {{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save Course</button>
+                            <a href="{{ route('group.index') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- data table end -->
+
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.select2').select2();
-    })
-    class Datepicker {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        })
+        class Datepicker {
             constructor(wrapper) {
                 this.wrapper = wrapper;
                 this.currentDate = new Date();
@@ -388,5 +396,5 @@ Group Edit - Admin Panel
         document.querySelectorAll('.datepicker-wrapper').forEach(wrapper => {
             new Datepicker(wrapper);
         });
-</script>
+    </script>
 @endsection

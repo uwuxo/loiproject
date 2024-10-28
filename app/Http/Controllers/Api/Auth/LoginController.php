@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use App\Models\Logged;
 
 class LoginController extends Controller
 {
@@ -47,12 +48,19 @@ class LoginController extends Controller
 
             foreach($groups as $group){
                 $room = $group->rooms()->where('name', $input)->first();
-                if($room)
-                $allowedDays = json_decode($room->allowed_days, true);
-                $currentDay = Carbon::now()->dayOfWeek; 
-                if (in_array($currentDay, $allowedDays)) {
-                    return true;
+                if($room){
+                    Logged::create([
+                        'user_id' => $user->id, 
+                        'room_id' => $room->id, 
+                        'created_at' => Carbon::now()
+                    ]);
+                    $allowedDays = json_decode($room->allowed_days, true);
+                    $currentDay = Carbon::now()->dayOfWeek; 
+                    if (in_array($currentDay, $allowedDays)) {
+                        return true;
+                    }
                 }
+                
             }
         }
     }

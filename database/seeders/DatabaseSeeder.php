@@ -44,11 +44,11 @@ class DatabaseSeeder extends Seeder
         // create roles and assign created permissions
 
         // this can be done as separate statements
-        $role = Role::create(['name' => 'group-admin']);
+        $role = Role::create(['name' => 'course-admin']);
         $role->givePermissionTo(Permission::all());
-        $role = Role::create(['name' => 'group-view']);
+        $role = Role::create(['name' => 'course-view']);
         $role->givePermissionTo('view');
-        $role = Role::create(['name' => 'group-edit']);
+        $role = Role::create(['name' => 'course-edit']);
         $role->givePermissionTo(['edit','view']);
 
         // this can be done as separate statements

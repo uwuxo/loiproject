@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
+        'type',
     ];
 
     /**
@@ -52,5 +53,9 @@ class User extends Authenticatable
     public Function  courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class);
+    }
+
+    public Function  logged(){
+        return $this->hasMany(Logged::class);
     }
 }

@@ -27,12 +27,17 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('course/detail/{id}', [App\Http\Controllers\HomeController::class, 'detail'])->name('detail')->middleware('auth');
+
+Route::get('/logged', [App\Http\Controllers\HomeController::class, 'loggedIn'])->name('logged');
+
 Route::get('/login', [LoginNewController::class, 'login'])->name('users.login');
 Route::post('/user-login', [LoginNewController::class, 'loginOnPage'])->name('login')->middleware('guest');
 Route::prefix('/user')->middleware('auth')->group(function(){
     Route::get('show', [UserShowController::class, 'show'])->name('show.user');
 });
-Route::prefix('/admin')->middleware('auth')->group(function(){
+Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
     Route::get('/dashboard', [UserNewController::class, 'dashboard'])->name('dashboard');
 
 //User
@@ -49,23 +54,23 @@ Route::prefix('/admin')->middleware('auth')->group(function(){
         'role:super-admin|user-admin'
         ])->name('user.destroy');
 //Group
-    Route::get('/groups', [CourseController::class, 'index'])->middleware([
-        'role:super-admin|group-admin|group-edit|group-view'
+    Route::get('/courses', [CourseController::class, 'index'])->middleware([
+        'role:super-admin|course-admin|course-edit|course-view'
         ])->name('group.index');
-    Route::get('/group/create', [CourseController::class, 'create'])->middleware([
-        'role:super-admin|group-admin'
+    Route::get('/course/create', [CourseController::class, 'create'])->middleware([
+        'role:super-admin|course-admin'
         ])->name('group.create');
-    Route::get('/group/edit/{id}', [CourseController::class, 'edit'])->middleware([
-        'role:super-admin|group-admin|group-edit'
+    Route::get('/course/edit/{id}', [CourseController::class, 'edit'])->middleware([
+        'role:super-admin|course-admin|course-edit'
         ])->name('group.edit');
-    Route::post('/group/create', [CourseController::class, 'register'])->middleware([
-        'role:super-admin|group-admin'
+    Route::post('/course/create', [CourseController::class, 'register'])->middleware([
+        'role:super-admin|course-admin'
         ])->name('group.register');
-    Route::post('/group/update/{id}', [CourseController::class, 'update'])->middleware([
-        'role:super-admin|group-admin|group-edit'
+    Route::post('/course/update/{id}', [CourseController::class, 'update'])->middleware([
+        'role:super-admin|course-admin|course-edit'
         ])->name('group.update');
-    Route::post('/group/destroy/{id}', [CourseController::class, 'destroy'])->middleware([
-        'role:super-admin|group-admin'
+    Route::post('/course/destroy/{id}', [CourseController::class, 'destroy'])->middleware([
+        'role:super-admin|course-admin'
         ])->name('group.destroy');
 //Room
     Route::get('/rooms/{id}', [RoomController::class, 'index'])->middleware([

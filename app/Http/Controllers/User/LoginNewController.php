@@ -38,7 +38,7 @@ class LoginNewController extends Controller
             if($user->hasRole('super-admin'))
             return redirect()->route('dashboard');
             else{
-                return redirect()->route('show.user');
+                return redirect()->route('home');
             }
         }
 

@@ -57,6 +57,7 @@ Users - Admin Panel
                                     <th width="10%">Username</th>
                                     <th width="15%">Email</th>
                                     <th width="5%">Status</th>
+                                    <th width="5%">type</th>
                                     @hasanyrole('super-admin|user-admin|user-edit')
                                     <th width="10%">Roles</th>
                                     @endhasanyrole
@@ -79,6 +80,7 @@ Users - Admin Panel
                                             <span class="badge badge-danger">inactive</span>
                                         @endif
                                     </td>
+                                    <td>{{ $user->type }}</td>
                                     @hasanyrole('super-admin|user-admin|user-edit')
                                     <td>
                                         @foreach ($user->roles as $role)

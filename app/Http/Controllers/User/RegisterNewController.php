@@ -29,6 +29,7 @@ class RegisterNewController extends Controller
             'username' => 'required|string|min:4|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'type' => 'required',
             //'allowed_days' => ['required', 'array'], // Validate rằng user đã chọn các ngày
         ]);
 
@@ -39,6 +40,7 @@ class RegisterNewController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'status' => $request->status,
+            'type' => $request->type,
             'password' => Hash::make($request->password),
             //'allowed_days' => $allowedDays, // Lưu danh sách ngày được chọn
         ]);

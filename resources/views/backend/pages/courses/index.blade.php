@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Groups - Admin Panel
+Courses - Admin Panel
 @endsection
 
 @section('styles')
@@ -21,10 +21,10 @@ Groups - Admin Panel
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="breadcrumbs-area clearfix">
-                <h4 class="page-title pull-left">Groups</h4>
+                <h4 class="page-title pull-left">Courses</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><span>All Groups</span></li>
+                    <li><span>All Courses</span></li>
                 </ul>
             </div>
         </div>
@@ -41,10 +41,10 @@ Groups - Admin Panel
         <div class="col-12 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title float-left">Groups List</h4>
+                    <h4 class="header-title float-left">Course List</h4>
                     <p class="float-right mb-2">
                         @hasanyrole('super-admin|group-admin')
-                        <a class="btn btn-primary text-white" href="{{ route('group.create') }}">Create New Group</a>
+                        <a class="btn btn-primary text-white" href="{{ route('group.create') }}">Create New Course</a>
                         @endhasanyrole
                     </p>
                     <div class="clearfix"></div>
@@ -55,7 +55,8 @@ Groups - Admin Panel
                                 <tr>
                                     <th width="10%">Name</th>
                                     <th width="20%">Rooms</th>
-                                    <th width="15%">Time</th>
+                                    <th width="10%">Start date</th>
+                                    <th width="10%">End date</th>
                                     <th width="5%">Status</th>
                                     <th width="10%">Created At</th>
                                     @hasanyrole('super-admin|group-admin|group-edit')
@@ -78,8 +79,10 @@ Groups - Admin Panel
                                         @endif
                                     </td>
                                     <td>
-                                        <p>Start date: ({{ Carbon\Carbon::parse($group->start_date)->format('m/d/Y') }})</p>
-                                        <p>End date: ({{ Carbon\Carbon::parse($group->end_date)->format('m/d/Y') }})</p>
+                                        {{ Carbon\Carbon::parse($group->start_date)->format('m/d/Y') }}
+                                    </td>
+                                    <td>
+                                        {{ Carbon\Carbon::parse($group->end_date)->format('m/d/Y') }}
                                     </td>
                                     <td>
                                         @if ($group->status)

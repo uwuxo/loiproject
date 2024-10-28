@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Carbon\Carbon;
 
 class Course extends Model
 {
@@ -18,5 +19,14 @@ class Course extends Model
 
     public function rooms(){
         return $this->hasMany(Room::class);
+    }
+
+    public function setStartDateAttribute($value)
+    {
+        $this->attributes['start_date'] = Carbon::parse($value)->format('Y-m-d H:i:s');
+    }
+    public function setEndDateAttribute($value)
+    {
+        $this->attributes['end_date'] = Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 }

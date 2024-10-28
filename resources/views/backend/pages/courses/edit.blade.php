@@ -133,7 +133,7 @@ Course Edit - Admin Panel
                                                     <label class="form-label">Start Date</label>
                                                     <input type="text" id="start_date" name="start_date"
                                                         class="form-control datepicker" readonly placeholder="DD/MM/YYYY"
-                                                        value="{{ Carbon\Carbon::parse($group->start_date)->format('m/d/Y') }}"
+                                                        value="{{ Carbon\Carbon::parse($group->start_date)->format('d-m-Y') }}"
                                                         required>
                                                     <div class="datepicker-popup">
                                                         <div class="calendar-header">
@@ -161,7 +161,7 @@ Course Edit - Admin Panel
                                                     <label class="form-label">End Date</label>
                                                     <input type="text" id="end_date" name="end_date"
                                                         class="form-control datepicker" readonly placeholder="DD/MM/YYYY"
-                                                        value="{{ Carbon\Carbon::parse($group->end_date)->format('m/d/Y') }}"
+                                                        value="{{ Carbon\Carbon::parse($group->end_date)->format('d-m-Y') }}"
                                                         required>
                                                     <div class="datepicker-popup">
                                                         <div class="calendar-header">
@@ -388,7 +388,7 @@ Course Edit - Admin Panel
                 const day = date.getDate().toString().padStart(2, '0');
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 const year = date.getFullYear();
-                return `${day}/${month}/${year}`;
+                return `${day}-${month}-${year}`;
             }
         }
 

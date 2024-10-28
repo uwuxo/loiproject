@@ -45,7 +45,7 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required',
         ]);
 
         $group = Course::create([
@@ -72,7 +72,7 @@ class CourseController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -83,8 +83,8 @@ class CourseController extends Controller
         $group->name = $request->name;
         $group->description = $request->description;
         $group->status = $request->status;
-        $group->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-        $group->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
+        $group->start_date = $request->start_date;
+        $group->end_date = $request->end_date;
         $group->save();
 
         $group->users()->sync($request->users);

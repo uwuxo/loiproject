@@ -37,7 +37,7 @@ Dashboard Page - Admin Panel
                     <div class="seo-fact sbg1">
                         <a href="{{ route('group.index') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
-                                <div class="seofct-icon"><i class="fa fa-users"></i> Courses</div>
+                                <div class="seofct-icon"><i class="fa fa-book"></i> Courses</div>
                                 <h2>{{ $total_groups }}</h2>
                             </div>
                         </a>
@@ -51,8 +51,22 @@ Dashboard Page - Admin Panel
                     <div class="seo-fact sbg2">
                         <a href="{{ route('users.index') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
-                                <div class="seofct-icon"><i class="fa fa-user"></i> Users</div>
+                                <div class="seofct-icon"><i class="fa fa-users"></i> Users</div>
                                 <h2>{{ $total_users }}</h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endhasanyrole
+            @hasanyrole('super-admin|course-admin|course-edit')
+            <div class="col-md-6 mt-md-5 mb-3">
+                <div class="card">
+                    <div class="seo-fact sbg1">
+                        <a href="{{ route('gateway') }}">
+                            <div class="p-4 d-flex justify-content-between align-items-center">
+                                <div class="seofct-icon"><i class="fa fa-home"></i> Rooms</div>
+                                <h2>{{ $total_rooms }}</h2>
                             </div>
                         </a>
                     </div>
@@ -65,7 +79,7 @@ Dashboard Page - Admin Panel
                     <div class="seo-fact sbg3">
                         <a href="{{ route('logged') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
-                                <div class="seofct-icon"><i class="fa fa-user"></i> Logged In Users API</div>
+                                <div class="seofct-icon"><i class="fa fa-users"></i> Logged In Users API</div>
                                 <h2>{{ $loggedInUsers->count() }}</h2>
                             </div>
                         </a>

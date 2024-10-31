@@ -45,9 +45,14 @@ class LoginController extends Controller
     public function checkAlowedDay($user, $input){
         if($user && !empty($input)){
             $allowedDays = [];
-            $groups = $user->courses()->where('status', 1)->get();
+            $groups = $user->courses()->where('status', 1)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->get();
             foreach($groups as $group){
-                $room = $group->rooms()->where('name', $input)->first();
+                $room = $group->rooms()->where('name', $input)->whereTime('start_time', '<=', now())
+                ->whereTime('end_time', '>=', now())
+                ->first();
                 if($room){
                     $allowedDays = json_decode($room->allowed_days, true);
                     $currentDay = Carbon::now()->dayOfWeek; 

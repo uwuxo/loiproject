@@ -6,6 +6,7 @@ Room Edit - Admin Panel
 @endsection
 
 @section('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     .form-check-label {
         text-transform: capitalize;
@@ -65,8 +66,8 @@ Room Edit - Admin Panel
                 <h4 class="page-title pull-left">Room Edit</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('rooms', $room->course->id) }}">All Room</a></li>
-                    <li><span>Edit Room - {{ $room->name }}</span></li>
+                    <li><a href="{{ route('gateway') }}">All Room</a></li>
+                    <li><span>Edit Room</span></li>
                 </ul>
             </div>
         </div>
@@ -83,14 +84,14 @@ Room Edit - Admin Panel
         <div class="col-12 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">Edit Room - {{ $room->name }}</h4>
+                    <h4 class="header-title">Edit Room</h4>
                     @include('backend.layouts.partials.messages')
                     
                     <form action="{{ route('room.update', $room->id) }}" method="POST">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-6 col-sm-12">
-                                <label for="name">Room Name</label>
+                                <label for="name">Name</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $room->name) }}" required>
                             
                                 <div class="form-group mt-5">
@@ -98,6 +99,20 @@ Room Edit - Admin Panel
                                     <input type="time" class="datepicker" id="start_time" name="start_time" value="{{ $room->start_time }}" required>
                                     <label for="name">End Time</label>
                                     <input type="time" class="datepicker" id="end_time" name="end_time" value="{{ $room->end_time }}" required>
+                                </div>
+                                
+                                <div class="form-group mt-5">
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="password">Courses</label>
+    
+                                        <select name="groups[]" id="groups" class="form-control select2" multiple>
+                                            @foreach ($groups as $group)
+                                                <option value="{{ $group->id }}"
+                                                    {{ in_array($group->id, $room->courses->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                    {{ $group->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -138,7 +153,7 @@ Room Edit - Admin Panel
                         </div>
                         
                         <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save Room</button>
-                        <a href="{{ route('rooms', $room->course->id) }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
+                        <a href="{{ route('gateway') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
                     </form>
                 </div>
             </div>
@@ -147,4 +162,12 @@ Room Edit - Admin Panel
         
     </div>
 </div>
+@endsection
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        })
+    </script>
 @endsection

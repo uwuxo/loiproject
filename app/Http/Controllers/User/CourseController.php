@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Course;
+use App\Models\Room;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,8 @@ class CourseController extends Controller
     }
     public function create(){
         $users = User::select('id','name')->get();
-        return view('backend.pages.courses.create', compact('users'));
+        $rooms = Room::select('id','name')->get();
+        return view('backend.pages.courses.create', compact('users','rooms'));
     }
 
     /**
@@ -35,8 +37,9 @@ class CourseController extends Controller
     {
         $group = Course::find($id);
         $users = User::select('id','name')->get();
+        $rooms = Room::select('id','name')->get();
         //$allowed_days = json_decode($user->allowed_days, true); // Lấy danh sách các ngày mà user được phép đăng nhập
-        return view('backend.pages.courses.edit', compact('group','users'));
+        return view('backend.pages.courses.edit', compact('group','users','rooms'));
     }
 
     public function register(Request $request)
@@ -59,8 +62,11 @@ class CourseController extends Controller
         if($group && !empty($request->users)){
             $group->users()->attach($request->users);
         }
+        if($group && !empty($request->rooms)){
+            $group->rooms()->attach($request->rooms);
+        }
 
-    return redirect()->route('group.index')->with('success', 'Group Create successful.');
+    return redirect()->route('group.index')->with('success', 'Course create successful.');
         
     }
 
@@ -88,9 +94,10 @@ class CourseController extends Controller
         $group->save();
 
         $group->users()->sync($request->users);
+        $group->rooms()->sync($request->rooms);
 
         // Redirect với thông báo thành công
-        return redirect()->route('group.index')->with('success', 'Group updated successfully!');
+        return redirect()->route('group.index')->with('success', 'Course updated successfully!');
     }
 
     public function destroy($id)
@@ -98,6 +105,6 @@ class CourseController extends Controller
         $user = Course::find($id);
         $user->delete();
         return redirect()->route('group.index')
-                        ->with('success','Group deleted successfully');
+                        ->with('success','Course deleted successfully');
     }
 }

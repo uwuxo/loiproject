@@ -19,20 +19,26 @@ class RoomController extends Controller
     {
         $course = Course::find($id);
         $rooms = $course->rooms()->get();
-
+        
         return view('backend.pages.rooms.index', compact(['rooms','course']));
     }
 
-    public function create($id){
-        $course = Course::find($id);
-        return view('backend.pages.rooms.create', compact('course'));
+    public function gateway()
+    {
+        $rooms = Room::paginate(20);
+        return view('backend.pages.rooms.gateway', compact(['rooms']));
+    }
+
+    public function create(){
+        $courses = Course::all();
+        return view('backend.pages.rooms.create', compact('courses'));
     }
 
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:rooms',
@@ -40,9 +46,8 @@ class RoomController extends Controller
             'end_time' => 'required',
             'allowed_days' => 'required|array',
         ]);
-        $course = Course::find($id);
         $allowedDays = json_encode($request->allowed_days);
-        $room = $course->rooms()->create(
+        $room = Room::create(
             [
                 'name' => $request->name,
                 'start_time' => $request->start_time,
@@ -51,7 +56,11 @@ class RoomController extends Controller
             ]
         );
 
-        return redirect()->route('rooms', ['id' => $id])->with('success', 'Room create successful.');
+        if($room && !empty($request->groups)){
+            $room->courses()->attach($request->groups);
+        }
+
+        return redirect()->route('gateway')->with('success', 'Room create successful.');
     }
 
     /**
@@ -61,8 +70,9 @@ class RoomController extends Controller
     {
         $room = Room::find($id);
         $allowed_days = [];
-        $allowed_days = json_decode($room->allowed_days, true); // Lấy danh sách các ngày mà user được phép đăng nhập
-        return view('backend.pages.rooms.edit', compact(['room','allowed_days']));
+        $allowed_days = json_decode($room->allowed_days, true);
+        $groups = Course::select('id','name')->get();
+        return view('backend.pages.rooms.edit', compact(['room','allowed_days','groups']));
     }
 
     /**
@@ -91,8 +101,10 @@ class RoomController extends Controller
         $room->allowed_days = json_encode($request->allowed_days);
         $room->save();
 
+        $room->courses()->sync($request->groups);
+
         // Redirect với thông báo thành công
-        return redirect()->route('rooms', $room->course->id)->with('success', 'Room updated successfully!');
+        return redirect()->route('gateway')->with('success', 'Room updated successfully!');
     }
 
     /**
@@ -102,7 +114,7 @@ class RoomController extends Controller
     {
         $room = Room::find($id);
         $room->delete();
-        return redirect()->route('rooms', $room->course->id)
+        return redirect()->route('gateway')
                         ->with('success','Room deleted successfully');
     }
 }

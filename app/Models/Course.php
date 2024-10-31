@@ -17,8 +17,12 @@ class Course extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function rooms(){
-        return $this->hasMany(Room::class);
+    // public function rooms(){
+    //     return $this->hasMany(Room::class);
+    // }
+    public Function  rooms(): BelongsToMany
+    {
+        return $this->belongsToMany(Room::class);
     }
 
     public function setStartDateAttribute($value)

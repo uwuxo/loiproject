@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('loggeds', function (Blueprint $table) {
-            $table->foreignId('tokenable_id')->nullable()->constrained('personal_access_tokens')->cascadeOnDelete()->after('id');
-        });
+        // Schema::table('loggeds', function (Blueprint $table) {
+        //     $table->foreignId('tokenable_id')->nullable()->constrained('personal_access_tokens')->cascadeOnDelete()->after('id');
+        // });
     }
 
     /**
@@ -21,9 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('loggeds', function (Blueprint $table) {
-            $table->dropForeign(['tokenable_id']);
-            $table->dropColumn('tokenable_id') ;
-        });
+        // Schema::table('loggeds', function (Blueprint $table) {
+        //     $table->dropForeign(['tokenable_id']);
+        //     $table->dropColumn('tokenable_id') ;
+        // });
     }
 };

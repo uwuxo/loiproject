@@ -91,7 +91,7 @@ Course Edit - Admin Panel
                     <ul class="breadcrumbs pull-left">
                         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('group.index') }}">All Courses</a></li>
-                        <li><span>Edit Course - {{ $group->name }}</span></li>
+                        <li><span>Edit Course</span></li>
                     </ul>
                 </div>
             </div>
@@ -108,14 +108,14 @@ Course Edit - Admin Panel
             <div class="col-12 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title">Edit Course - {{ $group->name }}</h4>
+                        <h4 class="header-title">Edit Course</h4>
                         @include('backend.layouts.partials.messages')
 
                         <form action="{{ route('group.update', $group->id) }}" method="POST">
                             @csrf
                             <div class="form-row">
                                 <div class="form-group col-md-6 col-sm-12">
-                                    <label for="name">Course Name</label>
+                                    <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name" name="name"
                                         value="{{ old('name', $group->name) }}" required>
 
@@ -206,6 +206,19 @@ Course Edit - Admin Panel
                                             <option value="{{ $user->id }}"
                                                 {{ in_array($user->id, $group->users->pluck('id')->toArray()) ? 'selected' : '' }}>
                                                 {{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6 col-sm-12">
+                                    <label for="password">Rooms</label>
+                                    <select name="rooms[]" id="rooms" class="form-control select2" multiple>
+                                        @foreach ($rooms as $room)
+                                            <option value="{{ $room->id }}"
+                                                {{ in_array($room->id, $group->rooms->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                {{ $room->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

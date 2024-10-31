@@ -6,6 +6,7 @@ Room Create - Admin Panel
 @endsection
 
 @section('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
 <style>
     .form-check-label {
@@ -66,7 +67,7 @@ Room Create - Admin Panel
                 <h4 class="page-title pull-left">Room Create</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('rooms', $course->id) }}">All Room</a></li>
+                    <li><a href="{{ route('gateway') }}">All Room</a></li>
                     <li><span>Room</span></li>
                 </ul>
             </div>
@@ -87,11 +88,11 @@ Room Create - Admin Panel
                     <h4 class="header-title">Create New Room</h4>
                     @include('backend.layouts.partials.messages')
                     
-                    <form action="{{ route('room.store', $course->id) }}" method="POST">
+                    <form action="{{ route('room.store') }}" method="POST">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-6 col-sm-12">
-                                <label for="name">Room Name</label>
+                                <label for="name">Name</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                                 
                                 <div class="form-group mt-5">
@@ -99,6 +100,18 @@ Room Create - Admin Panel
                                     <input type="time" class="datepicker" id="start_time" name="start_time" required>
                                     <label for="name">End Time</label>
                                     <input type="time" class="datepicker" id="end_time" name="end_time" required>
+                                </div>
+                                
+                                <div class="form-group mt-5">
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="password">Courses</label>
+                                        <select name="groups[]" id="groups" class="form-control select2" multiple>
+                                            @foreach ($courses as $group)
+                                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                            @endforeach
+    
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -138,7 +151,7 @@ Room Create - Admin Panel
                             </div>
                         
                         <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save Room</button>
-                        <a href="{{ route('rooms', $course->id) }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
+                        <a href="{{ route('gateway') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
                     </form>
                 </div>
             </div>
@@ -148,4 +161,12 @@ Room Create - Admin Panel
     </div>
 </div>
 
+@endsection
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        })
+    </script>
 @endsection

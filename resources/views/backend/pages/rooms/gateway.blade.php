@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Users - Admin Panel
+Room - Admin Panel
 @endsection
 
 @section('styles')
@@ -21,10 +21,11 @@ Users - Admin Panel
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="breadcrumbs-area clearfix">
-                <h4 class="page-title pull-left">Users</h4>
+                <h4 class="page-title pull-left">Rooms</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><span>All Users</span></li>
+                    <li><a href="{{ route('group.index') }}">Courses</a></li>
+                    <li><span>All Rooms</span></li>
                 </ul>
             </div>
         </div>
@@ -41,10 +42,10 @@ Users - Admin Panel
         <div class="col-12 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title float-left">Users List</h4>
+                    <h4 class="header-title float-left">Rooms List</h4>
                     <p class="float-right mb-2">
-                        @hasanyrole('super-admin|user-admin')
-                        <a class="btn btn-primary text-white" href="{{ route('user.register') }}">Create New User</a>
+                        @hasanyrole('super-admin|group-admin')
+                        <a class="btn btn-primary text-white" href="{{ route('room.add') }}">Create New Room</a>
                         @endhasanyrole
                     </p>
                     <div class="clearfix"></div>
@@ -53,61 +54,64 @@ Users - Admin Panel
                         <table>
                             <thead class="bg-light text-capitalize">
                                 <tr>
-                                    <th width="15%">Name</th>
-                                    <th width="10%">UID</th>
-                                    <th width="15%">Email</th>
-                                    <th width="5%">Status</th>
-                                    <th width="5%">type</th>
-                                    @hasanyrole('super-admin|user-admin|user-edit')
-                                    <th width="10%">Roles</th>
-                                    @endhasanyrole
-                                    <th width="10%">Created At</th>
-                                    @hasanyrole('super-admin|user-admin|user-edit')
-                                    <th width="10%">Action</th>
+                                    <th width="30%">Name</th>
+                                    <th width="10%">Start time</th>
+                                    <th width="10%">End time</th>
+                                    <th width="30%">Allowed days</th>
+                                    @hasanyrole('super-admin|group-admin')
+                                    <th width="15%">Action</th>
                                     @endhasanyrole
                                 </tr>
                             </thead>
                             <tbody>
-                               @foreach ($users as $user)
+                                @foreach ($rooms as $room)
                                <tr>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->username }}</td>
-                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $room->name }}</td>
+                                    <td>{{ $room->start_time }}</td>
+                                    <td>{{ $room->end_time }}</td>
                                     <td>
-                                        @if ($user->status)
-                                            <span class="badge badge-success">active</span>
-                                        @else
-                                            <span class="badge badge-danger">inactive</span>
+                                        @php
+                                        $allowed_days = [];
+                                        $allowed_days = json_decode($room->allowed_days, true);
+                                        @endphp
+                                        @if (!empty($allowed_days))
+                                        @if(in_array(1, $allowed_days))
+                                        <p>Monday</p>
+                                        @endif
+                                        @if(in_array(2, $allowed_days))
+                                        <p>Tuesday</p>
+                                        @endif
+                                        @if(in_array(3, $allowed_days))
+                                        <p>Wednesday</p>
+                                        @endif
+                                        @if(in_array(4, $allowed_days))
+                                        <p>Thursday</p>
+                                        @endif
+                                        @if(in_array(5, $allowed_days))
+                                        <p>Friday</p>
+                                        @endif
+                                        @if(in_array(6, $allowed_days))
+                                        <p>Saturday</p>
+                                        @endif
+                                        @if(in_array(0, $allowed_days))
+                                        <p>Sunday</p>
+                                        @endif
                                         @endif
                                     </td>
-                                    <td>{{ $user->type }}</td>
-                                    @hasanyrole('super-admin|user-admin|user-edit')
+                                    @hasanyrole('super-admin|group-admin')
                                     <td>
-                                        @foreach ($user->roles as $role)
-                                            <span class="badge badge-info mr-1">
-                                                {{ $role->name }}
-                                            </span>
-                                        @endforeach 
-                                    </td>
-                                    @endhasanyrole
-                                    <td>{{ $user->created_at->format('d-m-Y H:i:s') }}</td>
-                                    @hasanyrole('super-admin|user-admin|user-edit')
-                                    <td>
-                                        <a class="btn btn-success text-white" href="{{ route('user.edit', $user->id) }}">Edit</a>
-                                        @hasanyrole('super-admin|user-admin')
-                                        @if (!$user->super)
-                                        <a class="btn btn-danger text-white" href="#" id="submitBtn{{ $user->id}}">
+                                        <a class="btn btn-success text-white" href="{{ route('room.edit', $room->id) }}">Edit</a>
+                                        
+                                        <a class="btn btn-danger text-white" href="#" id="submitBtn{{ $room->id}}">
                                             Delete
                                         </a>
-
-                                        @if (!$user->super)
                                         <script>
-                                            document.getElementById('submitBtn{{ $user->id}}').addEventListener('click', function(e) {
+                                            document.getElementById('submitBtn{{ $room->id}}').addEventListener('click', function(e) {
                                                 e.preventDefault();
                                                 if (confirm('You sure you wanna trash this?')) {
                                                     var form = document.createElement('form');
                                                     form.method = 'post';
-                                                    form.action = '{{ route('user.destroy', $user->id) }}'; // Thay đổi URL này
+                                                    form.action = '{{ route('room.destroy', $room->id) }}'; // Thay đổi URL này
                                                     // Thêm CSRF token vào form
                                                     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                                                     var csrfInput = document.createElement('input');
@@ -120,9 +124,6 @@ Users - Admin Panel
                                                 }
                                             });
                                         </script>
-                                        @endif
-                                        @endif
-                                        @endhasanyrole
                                     </td>
                                     @endhasanyrole
                                 </tr>
@@ -134,7 +135,6 @@ Users - Admin Panel
             </div>
         </div>
         <!-- data table end -->
-        {{ $users->links() }}
     </div>
 </div>
 @endsection

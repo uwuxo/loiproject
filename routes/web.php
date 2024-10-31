@@ -11,6 +11,7 @@ use App\Http\Controllers\User\LoginNewController;
 use App\Http\Controllers\User\RoomController;
 use App\Http\Controllers\User\CourseController;
 use App\Http\Controllers\User\UserShowController;
+use App\Models\Room;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,11 +73,13 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
     Route::post('/course/destroy/{id}', [CourseController::class, 'destroy'])->middleware([
         'role:super-admin|course-admin'
         ])->name('group.destroy');
+
+    Route::get('/gateway', [RoomController::class, 'gateway'])->name('gateway');
 //Room
-    Route::get('/rooms/{id}', [RoomController::class, 'index'])->middleware([
-        'role:super-admin|group-admin|group-edit|group-view'
-        ])->name('rooms');
-    Route::get('/room/add/{id}', [RoomController::class, 'create'])->middleware([
+    // Route::get('/rooms/{id}', [RoomController::class, 'index'])->middleware([
+    //     'role:super-admin|group-admin|group-edit|group-view'
+    //     ])->name('rooms');
+    Route::get('/room/add', [RoomController::class, 'create'])->middleware([
         'role:super-admin|group-admin'
         ])->name('room.add');
     Route::get('/room/edit/{id}', [RoomController::class, 'edit'])->middleware([
@@ -85,7 +88,7 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
     Route::post('/room/update/{id}', [RoomController::class, 'update'])->middleware([
         'role:super-admin|group-admin'
         ])->name('room.update');
-    Route::post('/room/store/{id}', [RoomController::class, 'store'])->middleware([
+    Route::post('/room/store', [RoomController::class, 'store'])->middleware([
         'role:super-admin|group-admin'
         ])->name('room.store');
     Route::post('/room/destroy/{id}', [RoomController::class, 'destroy'])->middleware([

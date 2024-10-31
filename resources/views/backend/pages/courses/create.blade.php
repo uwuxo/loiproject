@@ -115,7 +115,7 @@ Course Create - Admin Panel
                             @csrf
                             <div class="form-row">
                                 <div class="form-group col-md-6 col-sm-12">
-                                    <label for="name">Course Name</label>
+                                    <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name" name="name"
                                         value="{{ old('name') }}" required>
 
@@ -203,6 +203,18 @@ Course Create - Admin Panel
                                     <select name="users[]" id="users" class="form-control select2" multiple>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6 col-sm-12">
+                                    <label for="password">Rooms</label>
+                                    <select name="rooms[]" id="rooms" class="form-control select2" multiple>
+                                        @foreach ($rooms as $room)
+                                            <option value="{{ $room->id }}">{{ $room->name }}</option>
                                         @endforeach
 
                                     </select>

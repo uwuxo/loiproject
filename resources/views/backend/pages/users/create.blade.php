@@ -49,12 +49,12 @@
                             @csrf
                             <div class="form-row">
                                 <div class="form-group col-md-6 col-sm-12">
-                                    <label for="name">User Name</label>
+                                    <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name" name="name"
                                         value="{{ old('name') }}" required>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12">
-                                    <label for="email">Username</label>
+                                    <label for="email">UID</label>
                                     <input type="text" class="form-control" id="username" name="username"
                                         value="{{ old('username') }}" required>
                                 </div>

@@ -46,8 +46,8 @@ Home | Security card project
                                 <tr>
                                     <td>{{ $course->name }}</td>                                    
                                     <td>{{ $course->description }}</td>
-                                    <td>{{ Carbon\Carbon::parse($course->start_date)->format('m/d/Y') }}</td>
-                                    <td>{{ Carbon\Carbon::parse($course->end_date)->format('m/d/Y') }}</td>
+                                    <td>{{ Carbon\Carbon::parse($course->start_date)->format('d/m/Y') }}</td>
+                                    <td>{{ Carbon\Carbon::parse($course->end_date)->format('d/m/Y') }}</td>
                                 </tr>
                             </tbody>
                         </table>

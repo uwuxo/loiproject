@@ -45,8 +45,8 @@ Home | Security card project
                                 @foreach ($user->courses as $course)
                                 <tr>
                                     <td><a href="{{ route('detail', $course->id) }}">{{ $course->name }}</a></td>
-                                    <td>{{ Carbon\Carbon::parse($course->start_date)->format('m/d/Y') }}</td>
-                                    <td>{{ Carbon\Carbon::parse($course->end_date)->format('m/d/Y') }}</td>
+                                    <td>{{ Carbon\Carbon::parse($course->start_date)->format('d/m/Y') }}</td>
+                                    <td>{{ Carbon\Carbon::parse($course->end_date)->format('d/m/Y') }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

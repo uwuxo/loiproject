@@ -92,9 +92,10 @@ class CourseController extends Controller
             'end_date' => $request->end_date,
             'schedule' => $request->schedule
         ]);
+        dd($updatedCourse);
         $conflictCheck = $updatedCourse->validateScheduleConflict($id,$request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {
-            dd($conflictCheck);
+            
             return back()
                 ->withErrors('error', sprintf(
                     'Course schedule conflict with course "%s" (from %s to %s)',

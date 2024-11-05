@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Room extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','allowed_days','start_time','end_time'];
+    protected $fillable = ['name'];
+    
 
     public function  course() {
         return $this->belongsTo(Course::class);
@@ -23,4 +24,6 @@ class Room extends Model
     public function  logged() {
         return $this->hasMany(Logged::class);
     }
+
+    
 }

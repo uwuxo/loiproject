@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use App\Models\Logged;
+use App\Models\Attendance;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -19,7 +21,13 @@ class LoginController extends Controller
     {
         $user = User::where('username', $request->input('username'))->where('status', true)->first();
 
-        if(!$this->checkAlowedDay($user, $request->input('room'))){
+        // if($user->canLoginRoom($request->input('room'))){
+        //     return 'ok';
+        // }else{
+        //     return 'fail';
+        // }
+
+        if(!$token = $user->canLoginRoom($request->input('room'))){
             throw ValidationException::withMessages([
                 "The credentials you entered are incorrect"
             ]);
@@ -35,7 +43,7 @@ class LoginController extends Controller
         $formattedDate['created_at'] = $user->created_at->format('d-m-Y H:i:s');
         $formattedDate['updated_at'] = $user->updated_at->format('d-m-Y H:i:s');
 
-        $token = $user->createToken('laraval_api_token')->plainTextToken;
+        //$token = $user->createToken('laraval_api_token')->plainTextToken;
         return response()->json([
             'user' => $formattedDate,
             'token' => $token

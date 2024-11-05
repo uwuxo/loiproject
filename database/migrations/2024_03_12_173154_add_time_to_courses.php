@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('courses', function (Blueprint $table) {
             $table->timestamp('start_date')->after('id');
             $table->timestamp('end_date')->after('id');
+            $table->json('schedule');
             $table->text('description')->nullable()->after('id');
         });
     }

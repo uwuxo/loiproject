@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -42,19 +43,26 @@ class RoomController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:rooms',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'allowed_days' => 'required|array',
         ]);
-        $allowedDays = json_encode($request->allowed_days);
-        $room = Room::create(
+        //$allowedDays = json_encode($request->allowed_days);
+        $room = new Room(
             [
                 'name' => $request->name,
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
-                'allowed_days' => $allowedDays
             ]
         );
+
+        if(!empty($request->groups) && count($request->groups) > 1){
+            $room->courses()->attach($request->groups);
+            $conflictCheck = $room->courses()->first()->validateScheduleConflict(null,null,$request->groups);
+            
+            if ($conflictCheck['hasConflict']) {
+                $room->courses()->sync([]);
+                return redirect()->back()
+                    ->with('error', 'Room schedule conflict. Please try again.')
+                    ->withInput();
+            }
+        }
+        $room->save();
 
         if($room && !empty($request->groups)){
             $room->courses()->attach($request->groups);
@@ -68,11 +76,11 @@ class RoomController extends Controller
      */
     public function edit($id)
     {
-        $room = Room::find($id);
-        $allowed_days = [];
-        $allowed_days = json_decode($room->allowed_days, true);
+        $room = Room::findOrFail($id);
+        //$allowed_days = [];
+        //$allowed_days = json_decode($room->allowed_days, true);
         $groups = Course::select('id','name')->get();
-        return view('backend.pages.rooms.edit', compact(['room','allowed_days','groups']));
+        return view('backend.pages.rooms.edit', compact(['room','groups']));
     }
 
     /**
@@ -80,26 +88,30 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $room = Room::find($id);
+        $room = Room::findOrFail($id);
 
         // Validate dữ liệu
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:25|unique:rooms,name,' . $room->id,
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'allowed_days' => 'required|array',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
+        if(!empty($request->groups) && count($request->groups) > 1){
+            $conflictCheck = $room->courses()->first()->validateScheduleConflict(null,null,$request->groups);
+            
+            if ($conflictCheck['hasConflict']) {
+                return redirect()->back()
+                    ->with('error', 'Room schedule conflict. Please try again.')
+                    ->withInput();
+            }
+        }
 
         // Cập nhật thông tin người dùng
-        $room->name = $request->name;
-        $room->start_time = $request->start_time;
-        $room->end_time = $request->end_time;
-        $room->allowed_days = json_encode($request->allowed_days);
-        $room->save();
+        $room->update([
+            'name' => $request->name,
+        ]);
 
         $room->courses()->sync($request->groups);
 

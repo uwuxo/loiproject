@@ -11,6 +11,7 @@ use App\Models\Room;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CourseRequest;
 
 class CourseController extends Controller
 {
@@ -42,59 +43,76 @@ class CourseController extends Controller
         return view('backend.pages.courses.edit', compact('group','users','rooms'));
     }
 
-    public function register(Request $request)
+    public function register(CourseRequest $request)
     {
-        // Validate form
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required',
-        ]);
-
-        $group = Course::create([
+        $course = new Course([
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
             'start_date' => $request->start_date,
-            'end_date' => $request->end_date
+            'end_date' => $request->end_date,
+            'schedule' => $request->schedule,
         ]);
-        
-        if($group && !empty($request->users)){
-            $group->users()->attach($request->users);
+
+        $conflictCheck = $course->validateScheduleConflict($id=null, $request->rooms ?? null);
+        if ($conflictCheck['hasConflict']) {
+            return redirect()->back()
+                ->with('error', sprintf(
+                    'Course schedule conflict with course "%s" (from %s to %s)',
+                    $conflictCheck['conflictWith']['name'],
+                    Carbon::parse($conflictCheck['conflictWith']['start_date'])->format('d/m/Y'),
+                    Carbon::parse($conflictCheck['conflictWith']['end_date'])->format('d/m/Y')
+                ))
+                ->withInput();
         }
-        if($group && !empty($request->rooms)){
-            $group->rooms()->attach($request->rooms);
+
+        $course->save();
+        
+        if($course && !empty($request->users)){
+            $course->users()->attach($request->users);
+        }
+        if($course && !empty($request->rooms)){
+            $course->rooms()->attach($request->rooms);
         }
 
     return redirect()->route('group.index')->with('success', 'Course create successful.');
         
     }
 
-    public function update(Request $request, $id)
+    public function update(CourseRequest $request, $id)
     {
-        $group = Course::find($id);
-
-        // Validate dữ liệu
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required',
+        $course = Course::findOrFail($id);
+        // Validate schedule conflict
+        $updatedCourse = new Course([
+            'name' => $request->name,
+            'description' => $request->description,
+            'status' => $request->status,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'schedule' => $request->schedule
+        ]);
+        $conflictCheck = $updatedCourse->validateScheduleConflict($id,$request->rooms ?? null);
+        if ($conflictCheck['hasConflict']) {
+            return redirect()->back()
+                ->with('error', sprintf(
+                    'Course schedule conflict with course "%s" (from %s to %s)',
+                    $conflictCheck['conflictWith']['name'],
+                    Carbon::parse($conflictCheck['conflictWith']['start_date'])->format('d/m/Y'),
+                    Carbon::parse($conflictCheck['conflictWith']['end_date'])->format('d/m/Y')
+                ))
+                ->withInput();
+        }
+        $course->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'status' => $request->status,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'schedule' => $request->schedule
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        // Cập nhật thông tin người dùng
-        $group->name = $request->name;
-        $group->description = $request->description;
-        $group->status = $request->status;
-        $group->start_date = $request->start_date;
-        $group->end_date = $request->end_date;
-        $group->save();
-
-        $group->users()->sync($request->users);
-        $group->rooms()->sync($request->rooms);
+        $course->users()->sync($request->users);
+        $course->rooms()->sync($request->rooms);
 
         // Redirect với thông báo thành công
         return redirect()->route('group.index')->with('success', 'Course updated successfully!');

@@ -34,33 +34,33 @@ Home | Security card project
                         <table id="dataTable" class="text-left w-100">
                             <thead class="bg-light text-capitalize">
                                 <tr>
-                                    <th width="50%">User</th>
+                                    <th width="10%">Total</th>
                                     <th width="50%">Login details</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($loggedInUsers as $user)
                                 <tr>
-                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $total }}</td>
                                     <td>
+                                @foreach ($rooms as $loggedInUser)
+                                @php
+                                    dd($loggedInUser->logged);
+                                @endphp
                                         <table id="dataTable" class="text-left w-100">
                                             <thead class="bg-light text-capitalize">
-                                                <tr>
-                                            <th>Room</th>
-                                            <th>Time</th>
-                                                </tr>
-                                            </head>
-                                            @foreach ($user->logged as $logged)
                                             <tr>
-                                            <td>{{ $logged->room->name }}</td>
-                                            <td>{{ $logged->created_at }}</td>
-                                            </tr>                                            
-                                            @endforeach
+                                            <th>Room</th>
+                                            </tr>
+                                            </head>
+                                            <tr>
+                                            <td>{{ $loggedInUser->room }}</td>
+                                            </tr>
                                         </table>
                                         
-                                    </td>
-                                </tr>
+                                    
                                 @endforeach
+                            </td>
+                            </tr>
                             </tbody>
                         </table>
                         @else

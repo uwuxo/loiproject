@@ -40,7 +40,7 @@
             <div class="col-12 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title float-left">Course List</h4>
+                        <h4 class="header-title float-left">Courses List</h4>
                         <p class="float-right mb-2">
                             @hasanyrole('super-admin|group-admin')
                                 <a class="btn btn-primary text-white" href="{{ route('group.create') }}">Create New Course</a>
@@ -52,12 +52,13 @@
                             <table>
                                 <thead class="bg-light text-capitalize">
                                     <tr>
-                                        <th width="10%">Name</th>
-                                        <th width="20%">Rooms</th>
+                                        <th width="30%">Name</th>
+                                        <th width="10%">Rooms</th>
+                                        <th width="30%">Schedule</th>
                                         <th width="10%">Start date</th>
                                         <th width="10%">End date</th>
                                         <th width="5%">Status</th>
-                                        <th width="10%">Created At</th>
+                                        {{-- <th width="10%">Created At</th> --}}
                                         @hasanyrole('super-admin|group-admin|group-edit')
                                             <th width="10%">Action</th>
                                         @endhasanyrole
@@ -75,6 +76,45 @@
                                                 @endif
                                             </td>
                                             <td>
+
+                                            
+                                        <div class="weekly-schedule">
+                                        @php
+                                            $days = [
+                                                'monday' => 'Monday',
+                                                'tuesday' => 'Tuesday',
+                                                'wednesday' => 'Wednesday',
+                                                'thursday' => 'Thursday',
+                                                'friday' => 'Friday',
+                                                'saturday' => 'Saturday',
+                                                'sunday' => 'Sunday',
+                                            ];
+                                            $schedule = $group->schedule;
+                                        @endphp
+                                                    
+                                            @foreach ($days as $dayKey => $dayLabel)
+                                            @if (!empty($schedule[$dayKey]['start_time']))
+                                            <div class="card">
+                                                <div class="pt-3">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-12">
+                                                            <div class="row time-inputs">
+                                                                <div class="col-md-5">
+                                                                    <div class="">{{ $dayLabel }}</div>    
+                                                                </div>
+                                                                <div class="col-md-7">
+                                                                    <div class="">{{ $schedule[$dayKey]['start_time'] }} - {{ $schedule[$dayKey]['end_time'] }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endif
+                                            @endforeach
+                                        </div>
+                                            </td>
+                                            <td>
                                                 {{ Carbon\Carbon::parse($group->start_date)->format('d/m/Y') }}
                                             </td>
                                             <td>
@@ -87,7 +127,7 @@
                                                     <span class="badge badge-danger">inactive</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $group->created_at->format('d-m-Y H:i:s') }}</td>
+                                            {{-- <td>{{ $group->created_at->format('d-m-Y H:i:s') }}</td> --}}
                                             @hasanyrole('super-admin|group-admin|group-edit')
                                                 <td>
                                                     <a class="btn btn-success text-white"

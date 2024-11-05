@@ -123,8 +123,36 @@ Course Edit - Admin Panel
                                         <label for="name">Description</label>
                                         <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $group->description) }}</textarea>
                                     </div>
+                                    <div class="mt-5">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6 col-sm-12">
+                                                <label for="password">Users</label>
+                                                <select name="users[]" id="users" class="form-control select2" multiple>
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            {{ in_array($user->id, $group->users->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                            {{ $user->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+            
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6 col-sm-12">
+                                                <label for="password">Rooms</label>
+                                                <select name="rooms[]" id="rooms" class="form-control select2" multiple>
+                                                    @foreach ($rooms as $room)
+                                                        <option value="{{ $room->id }}"
+                                                            {{ in_array($room->id, $group->rooms->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                            {{ $room->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-6 col-sm-12">
+                                    <h3 class="header-title">Schedule</h3>
                                     <div class="mt-5">
                                         <!-- Datepicker 1 -->
                                         <div class="row mb-4">
@@ -183,6 +211,76 @@ Course Edit - Admin Panel
                                         </div>
                                     </div>
                                     <div class="mt-5">
+                                        @props(['name' => 'schedule', 'values' => $group->schedule])
+
+                                        @php
+                                            $days = [
+                                                'monday' => 'Monday',
+                                                'tuesday' => 'Tuesday',
+                                                'wednesday' => 'Wednesday',
+                                                'thursday' => 'Thursday',
+                                                'friday' => 'Friday',
+                                                'saturday' => 'Saturday',
+                                                'sunday' => 'Sunday',
+                                            ];
+
+                                            // Xử lý values từ old input hoặc model
+                                            $oldValues = old($name, $values ?? []);
+                                        @endphp
+
+                                        <div class="weekly-schedule">
+                                            @foreach ($days as $dayKey => $dayLabel)
+                                                <div class="card mb-3">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-md-2">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox"
+                                                                        class="form-check-input day-toggle"
+                                                                        id="day_{{ $dayKey }}"
+                                                                        @checked(!empty($oldValues[$dayKey]['start_time']))>
+                                                                    <label class="form-check-label"
+                                                                        for="day_{{ $dayKey }}">
+                                                                        {{ $dayLabel }}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <div class="row time-inputs"
+                                                                    @if (empty($oldValues[$dayKey]['start_time'])) style="display: none;" @endif>
+                                                                    <div class="col-md-5">
+                                                                        <label class="form-label">Start Time</label>
+                                                                        <input type="time"
+                                                                            name="{{ $name }}[{{ $dayKey }}][start_time]"
+                                                                            class="form-control start-time"
+                                                                            value="{{ $oldValues[$dayKey]['start_time'] ?? '' }}"
+                                                                            @error("$name.$dayKey.start_time") is-invalid @enderror>
+                                                                        @error("$name.$dayKey.start_time")
+                                                                            <div class="invalid-feedback">
+                                                                                {{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label class="form-label">End Time</label>
+                                                                        <input type="time"
+                                                                            name="{{ $name }}[{{ $dayKey }}][end_time]"
+                                                                            class="form-control end-time"
+                                                                            value="{{ $oldValues[$dayKey]['end_time'] ?? '' }}"
+                                                                            @error("$name.$dayKey.end_time") is-invalid @enderror>
+                                                                        @error("$name.$dayKey.end_time")
+                                                                            <div class="invalid-feedback">
+                                                                                {{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="mt-5">
                                         <label for="allowed_days" class="form-label">Status</label><br>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="status"
@@ -195,34 +293,11 @@ Course Edit - Admin Panel
                                             <label class="form-check-label" for="tuesday">Inactive</label>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
 
-                            <div class="form-row">
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="password">Users</label>
-                                    <select name="users[]" id="users" class="form-control select2" multiple>
-                                        @foreach ($users as $user)
-                                            <option value="{{ $user->id }}"
-                                                {{ in_array($user->id, $group->users->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                                {{ $user->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="password">Rooms</label>
-                                    <select name="rooms[]" id="rooms" class="form-control select2" multiple>
-                                        @foreach ($rooms as $room)
-                                            <option value="{{ $room->id }}"
-                                                {{ in_array($room->id, $group->rooms->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                                {{ $room->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                            
 
                             <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save Course</button>
                             <a href="{{ route('group.index') }}" class="btn btn-secondary mt-4 pr-4 pl-4">Cancel</a>
@@ -409,5 +484,104 @@ Course Edit - Admin Panel
         document.querySelectorAll('.datepicker-wrapper').forEach(wrapper => {
             new Datepicker(wrapper);
         });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const schedule = document.querySelector('.weekly-schedule');
+
+            // Xử lý toggle ngày
+            schedule.querySelectorAll('.day-toggle').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const timeInputs = this.closest('.card-body').querySelector('.time-inputs');
+                    timeInputs.style.display = this.checked ? 'flex' : 'none';
+
+                    if (!this.checked) {
+                        timeInputs.querySelectorAll('input[type="time"]').forEach(input => {
+                            input.value = '';
+                            input.classList.remove('is-invalid');
+                            input.nextElementSibling.textContent = '';
+                        });
+                    }
+                });
+            });
+
+            // Ngăn chặn form submit khi có lỗi
+            const form = schedule.closest('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    let hasError = false;
+
+                    // Kiểm tra tất cả các ngày được chọn
+                    schedule.querySelectorAll('.day-toggle:checked').forEach(checkbox => {
+                        const cardBody = checkbox.closest('.card-body');
+                        const startTime = cardBodyx.querySelector('.start-time');
+                        const endTime = cardBodyx.querySelector('.end-time');
+
+                        if (!validateTimeRange(startTime, endTime)) {
+                            hasError = true;
+                        }
+                    });
+
+                    if (hasError) {
+                        e.preventDefault(); // Ngăn form submit nếu có lỗi
+                        // Scroll đến lỗi đầu tiên
+                        const firstError = schedule.querySelector('.is-invalid');
+                        if (firstError) {
+                            firstError.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Validate khi thay đổi giá trị
+            schedule.querySelectorAll('.time-inputs input[type="time"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const cardBody = this.closest('.card-body');
+                    const startTime = cardBody.querySelector('.start-time');
+                    const endTime = cardBody.querySelector('.end-time');
+                    validateTimeRange(startTime, endTime);
+                });
+            });
+        });
+
+        function validateTimeRange(startInput, endInput) {
+            // Reset validation state
+            [startInput, endInput].forEach(input => {
+                input.classList.remove('is-invalid');
+                const feedback = input.nextElementSibling;
+                if (feedback) {
+                    feedback.textContent = '';
+                }
+            });
+
+            // Kiểm tra nếu có start time thì phải có end time
+            if (startInput.value && !endInput.value) {
+                endInput.classList.add('is-invalid');
+                if(endInput.nextElementSibling)
+                endInput.nextElementSibling.textContent = 'The field is required for the end time';
+                return false;
+            }
+
+            // Kiểm tra nếu có end time thì phải có start time
+            if (!startInput.value && endInput.value) {
+                startInput.classList.add('is-invalid');
+                if(startInput.nextElementSibling)
+                startInput.nextElementSibling.textContent = 'The field is required for the start time';
+                return false;
+            }
+
+            // Kiểm tra end time phải sau start time
+            if (startInput.value && endInput.value && endInput.value <= startInput.value) {
+                endInput.classList.add('is-invalid');
+                if(endInput.nextElementSibling)
+                endInput.nextElementSibling.textContent = 'The end time must be after the start time';
+                return false;
+            }
+
+            return true;
+        }
     </script>
 @endsection

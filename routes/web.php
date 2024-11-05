@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\Logout2Controller;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserNewController;
 use App\Http\Controllers\User\RegisterNewController;
@@ -75,6 +76,9 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
         ])->name('group.destroy');
 
     Route::get('/gateway', [RoomController::class, 'gateway'])->name('gateway');
+    Route::prefix('attendance')->group(function() {
+        Route::get('/report', [HomeController::class, 'getAttendanceReport']);
+    });
 //Room
     // Route::get('/rooms/{id}', [RoomController::class, 'index'])->middleware([
     //     'role:super-admin|group-admin|group-edit|group-view'

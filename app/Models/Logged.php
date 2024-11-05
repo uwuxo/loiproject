@@ -11,12 +11,19 @@ class Logged extends Model
 
     protected $fillable = [
         'room_id',
+        'course_id',
         'user_id',
+        'tokenable_id'
     ];
 
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 
     public function user()

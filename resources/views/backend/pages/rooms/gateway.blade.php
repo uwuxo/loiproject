@@ -55,9 +55,7 @@ Room - Admin Panel
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="30%">Name</th>
-                                    <th width="10%">Start time</th>
-                                    <th width="10%">End time</th>
-                                    <th width="30%">Allowed days</th>
+                                    <th width="50%">Courses</th>
                                     @hasanyrole('super-admin|group-admin')
                                     <th width="15%">Action</th>
                                     @endhasanyrole
@@ -67,35 +65,49 @@ Room - Admin Panel
                                 @foreach ($rooms as $room)
                                <tr>
                                     <td>{{ $room->name }}</td>
-                                    <td>{{ $room->start_time }}</td>
-                                    <td>{{ $room->end_time }}</td>
-                                    <td>
-                                        @php
-                                        $allowed_days = [];
-                                        $allowed_days = json_decode($room->allowed_days, true);
-                                        @endphp
-                                        @if (!empty($allowed_days))
-                                        @if(in_array(1, $allowed_days))
-                                        <p>Monday</p>
-                                        @endif
-                                        @if(in_array(2, $allowed_days))
-                                        <p>Tuesday</p>
-                                        @endif
-                                        @if(in_array(3, $allowed_days))
-                                        <p>Wednesday</p>
-                                        @endif
-                                        @if(in_array(4, $allowed_days))
-                                        <p>Thursday</p>
-                                        @endif
-                                        @if(in_array(5, $allowed_days))
-                                        <p>Friday</p>
-                                        @endif
-                                        @if(in_array(6, $allowed_days))
-                                        <p>Saturday</p>
-                                        @endif
-                                        @if(in_array(0, $allowed_days))
-                                        <p>Sunday</p>
-                                        @endif
+                                    <td class="pt-3">
+                                        @if ($room->courses)
+                                        @foreach ($room->courses as $course)
+                                        
+                                            <div class="title">{{ $course->name }}</div>
+                                            <div class="title">Schedule<br>Start: {{ Carbon\Carbon::parse($course->start_date)->format('d/m/Y') }} - End: {{ Carbon\Carbon::parse($course->end_date)->format('d/m/Y') }}</div>
+                                            <div class="weekly-schedule mb-5">
+                                                @php
+                                                    $days = [
+                                                        'monday' => 'Monday',
+                                                        'tuesday' => 'Tuesday',
+                                                        'wednesday' => 'Wednesday',
+                                                        'thursday' => 'Thursday',
+                                                        'friday' => 'Friday',
+                                                        'saturday' => 'Saturday',
+                                                        'sunday' => 'Sunday',
+                                                    ];
+                                                    $schedule = $course->schedule;
+                                                @endphp
+                                                            
+                                                    @foreach ($days as $dayKey => $dayLabel)
+                                                    @if (!empty($schedule[$dayKey]['start_time']))
+                                                    <div class="card">
+                                                        <div class="pb-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-md-12">
+                                                                    <div class="row time-inputs">
+                                                                        <div class="col-md-5">
+                                                                            <div class="">{{ $dayLabel }}</div>    
+                                                                        </div>
+                                                                        <div class="col-md-7">
+                                                                            <div class="">{{ $schedule[$dayKey]['start_time'] }} - {{ $schedule[$dayKey]['end_time'] }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+                                                    @endforeach
+                                                </div>
+                                        
+                                        @endforeach
                                         @endif
                                     </td>
                                     @hasanyrole('super-admin|group-admin')

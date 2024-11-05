@@ -94,12 +94,6 @@ Room Edit - Admin Panel
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $room->name) }}" required>
                             
-                                <div class="form-group mt-5">
-                                    <label for="name">Start Time</label>
-                                    <input type="time" class="datepicker" id="start_time" name="start_time" value="{{ $room->start_time }}" required>
-                                    <label for="name">End Time</label>
-                                    <input type="time" class="datepicker" id="end_time" name="end_time" value="{{ $room->end_time }}" required>
-                                </div>
                                 
                                 <div class="form-group mt-5">
                                     <div class="form-group col-md-6 col-sm-12">
@@ -114,40 +108,6 @@ Room Edit - Admin Panel
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="form-group col-md-6 col-sm-12">
-                            <div class="mb-3">
-                                <label for="allowed_days" class="form-label">Allowed Login Days</label><br>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="1" id="monday" {{ $allowed_days && in_array(1, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="monday">Monday</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="2" id="tuesday" {{ $allowed_days && in_array(2, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="tuesday">Tuesday</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="3" id="wednesday" {{ $allowed_days && in_array(3, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="wednesday">Wednesday</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="4" id="thursday" {{ $allowed_days && in_array(4, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="thursday">Thursday</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="5" id="friday" {{ $allowed_days && in_array(5, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="friday">Friday</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="6" id="saturday" {{ $allowed_days && in_array(6, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="saturday">Saturday</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="allowed_days[]" value="0" id="sunday" {{ $allowed_days && in_array(0, $allowed_days) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="sunday">Sunday</label>
-                                </div>
-                            </div>
                             </div>
                             
                         </div>

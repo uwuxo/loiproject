@@ -28,44 +28,50 @@ Home | Security card project
         <div class="col-12 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">Logged In Users</h4>
+                    <h4 class="header-title">Logged In Users {{ $total }}</h4>
                     <div class="data-tables">
-                        @if ($loggedInUsers->count())
                         <table id="dataTable" class="text-left w-100">
                             <thead class="bg-light text-capitalize">
                                 <tr>
-                                    <th width="10%">Total</th>
-                                    <th width="50%">Login details</th>
+                                    <th width="30%">Courses</th>
+                                    <th width="60%">Rooms</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($courses as $course)
                                 <tr>
-                                    <td>{{ $total }}</td>
+                                    <td>{{ $course->name }}</td>
                                     <td>
-                                @foreach ($rooms as $loggedInUser)
-                                @php
-                                    dd($loggedInUser->logged);
-                                @endphp
-                                        <table id="dataTable" class="text-left w-100">
-                                            <thead class="bg-light text-capitalize">
-                                            <tr>
-                                            <th>Room</th>
-                                            </tr>
-                                            </head>
-                                            <tr>
-                                            <td>{{ $loggedInUser->room }}</td>
-                                            </tr>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Room</th>
+                                                    <th width="10%" style="min-width: 100px;">Total</th>
+                                                    <th width="60%">Users</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($course->rooms as $room)
+                                                <tr>
+                                                    <td>{{ $room->name }}</td>
+                                                    <td><span class="alert-success">{{ $room->logged->count() }}</span></td>
+                                                    <td>
+                                                        <ul>
+                                                            @foreach ($room->logged as $userLogged)
+                                                            <li><span class="alert-success">{{ $userLogged->user->name }}</span></li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
                                         </table>
-                                        
-                                    
+                                    </td>
+                                </tr>
                                 @endforeach
-                            </td>
-                            </tr>
+                            
                             </tbody>
                         </table>
-                        @else
-                        <p>No Users Logged In</p>
-                        @endif
                     </div>
                 </div>
             </div>

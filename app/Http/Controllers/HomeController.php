@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\Room;
+use App\Models\Course;
 
 
 class HomeController extends Controller
@@ -25,8 +27,9 @@ class HomeController extends Controller
             $query->where('expires_at', '>=', now())->orWhereNull('expires_at');
         })->get();
         $total = $loggedInUsers->count();
+        $courses = Course::paginate(20);
         
-        return view('logged',compact('loggedInUsers','total'));
+        return view('logged',compact('loggedInUsers','total', 'courses'));
     }
 
     public function getAttendanceReport(Request $request)

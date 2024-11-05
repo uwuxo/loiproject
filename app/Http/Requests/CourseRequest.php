@@ -17,7 +17,7 @@ class CourseRequest extends FormRequest
         $rules = [
             'name' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'end_date' => 'required|date'//'required|date|after_or_equal:start_date',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ];
 
         foreach ($days as $day) {

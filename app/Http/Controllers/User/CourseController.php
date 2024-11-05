@@ -79,18 +79,31 @@ class CourseController extends Controller
         
     }
 
-    public function update(CourseRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $course = Course::findOrFail($id);
-        // Validate schedule conflict
-        $updatedCourse = new Course([
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->status,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'schedule' => $request->schedule
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'schedule' => 'required|array'
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        // Validate schedule conflict
+        // $updatedCourse = new Course([
+        //     'name' => $request->name,
+        //     'description' => $request->description,
+        //     'status' => $request->status,
+        //     'start_date' => $request->start_date,
+        //     'end_date' => $request->end_date,
+        //     'schedule' => $request->schedule
+        // ]);
         
         $conflictCheck = $updatedCourse->validateScheduleConflict($id,$request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {

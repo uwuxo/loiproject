@@ -79,39 +79,9 @@ class CourseController extends Controller
         
     }
 
-    public function update(Request $request, $id)
+    public function update(CourseRequest $request, $id)
     {
         $course = Course::findOrFail($id);
-
-        try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'start_date' => 'required|date',
-                'end_date' => 'required|date|after:start_date',
-                'schedule' => 'required|array'
-            ]);
-    
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput();
-            }
-    
-            // Tiếp tục xử lý logic sau khi validate thành công
-            // ...
-    
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Bắt lỗi ValidationException và xử lý
-            return response()->json([
-                'message' => 'Validation error',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            // Bắt lỗi chung và xử lý
-            return response()->json([
-                'message' => 'An error occurred',
-            ], 500);
-        }
         // Validate schedule conflict
         $updatedCourse = new Course([
             'name' => $request->name,

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Room;
+use App\Models\Logged;
 use Spatie\Permission\Models\Role;
 
 class UserNewController extends Controller
@@ -20,9 +21,10 @@ class UserNewController extends Controller
         $total_groups = Course::count();
         $total_users = User::count();
         $total_rooms = Room::count();
-        $loggedInUsers = User::whereHas('tokens', function ($query) {
-            $query->where('expires_at', '>=', now())->orWhereNull('expires_at');
-        })->get();
+        $loggedInUsers = Logged::count();
+        // $loggedInUsers = User::whereHas('tokens', function ($query) {
+        //     $query->where('expires_at', '>=', now())->orWhereNull('expires_at');
+        // })->get();
         return view('backend.pages.dashboard.index',compact('total_groups','total_rooms','total_users','loggedInUsers'));
     }
     public function index()

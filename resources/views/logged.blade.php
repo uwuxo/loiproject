@@ -28,7 +28,7 @@ Home | Security card project
         <div class="col-12 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">Logged In Users {{ $total }}</h4>
+                    <h4 class="header-title">Logged In Users {{ $loggeds }}</h4>
                     <div class="data-tables">
                         <table id="dataTable" class="text-left w-100">
                             <thead class="bg-light text-capitalize">

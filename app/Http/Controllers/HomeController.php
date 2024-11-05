@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Attendance;
 use App\Models\Room;
 use App\Models\Course;
-
+use App\Models\Logged;
 
 class HomeController extends Controller
 {
@@ -23,13 +23,14 @@ class HomeController extends Controller
     }
 
     public function loggedIn(){
-        $loggedInUsers = User::whereHas('tokens', function ($query) {
-            $query->where('expires_at', '>=', now())->orWhereNull('expires_at');
-        })->get();
-        $total = $loggedInUsers->count();
+        // $loggedInUsers = User::whereHas('tokens', function ($query) {
+        //     $query->where('expires_at', '>=', now())->orWhereNull('expires_at');
+        // })->get();
+        //$total = $loggedInUsers->count();
+        $loggeds = Logged::count();
         $courses = Course::paginate(20);
         
-        return view('logged',compact('loggedInUsers','total', 'courses'));
+        return view('logged',compact('loggeds', 'courses'));
     }
 
     public function getAttendanceReport(Request $request)

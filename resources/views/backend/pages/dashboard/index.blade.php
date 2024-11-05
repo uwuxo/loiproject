@@ -80,7 +80,7 @@ Dashboard Page - Admin Panel
                         <a href="{{ route('logged') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
                                 <div class="seofct-icon"><i class="fa fa-users"></i> Logged In Users API</div>
-                                <h2>{{ $loggedInUsers->count() }}</h2>
+                                <h2>{{ $loggedInUsers }}</h2>
                             </div>
                         </a>
                     </div>

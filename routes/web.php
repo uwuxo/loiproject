@@ -107,7 +107,15 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
         ])->name('register');
     
 });
-
+Route::get('/logs', function () {
+    $logFile = storage_path('logs/laravel.log');
+    if (file_exists($logFile)) {
+        $logs = file_get_contents($logFile);
+        return '<pre>' . $logs . '</pre>';
+    } else {
+        return 'Log file not found.';
+    }
+})->name('view-logs');
 Route::prefix('/auth')->group(function(){
 	// Authentication Routes...
 	Route::post('/login', LoginController::class)->middleware('guest');

@@ -56,7 +56,6 @@ class CourseController extends Controller
 
         $conflictCheck = $course->validateScheduleConflict($id=null, $request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {
-            
             return back()
                 ->withErrors('error', sprintf(
                     'Course schedule conflict with course "%s" (from %s to %s)',
@@ -92,10 +91,9 @@ class CourseController extends Controller
             'end_date' => $request->end_date,
             'schedule' => $request->schedule
         ]);
-        dd($updatedCourse);
+        
         $conflictCheck = $updatedCourse->validateScheduleConflict($id,$request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {
-            
             return back()
                 ->withErrors('error', sprintf(
                     'Course schedule conflict with course "%s" (from %s to %s)',

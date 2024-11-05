@@ -83,27 +83,44 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'schedule' => 'required|array'
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after:start_date',
+                'schedule' => 'required|array'
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+    
+            // Tiếp tục xử lý logic sau khi validate thành công
+            // ...
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Bắt lỗi ValidationException và xử lý
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Bắt lỗi chung và xử lý
+            return response()->json([
+                'message' => 'An error occurred',
+            ], 500);
         }
         // Validate schedule conflict
-        // $updatedCourse = new Course([
-        //     'name' => $request->name,
-        //     'description' => $request->description,
-        //     'status' => $request->status,
-        //     'start_date' => $request->start_date,
-        //     'end_date' => $request->end_date,
-        //     'schedule' => $request->schedule
-        // ]);
+        $updatedCourse = new Course([
+            'name' => $request->name,
+            'description' => $request->description,
+            'status' => $request->status,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'schedule' => $request->schedule
+        ]);
         
         $conflictCheck = $updatedCourse->validateScheduleConflict($id,$request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {

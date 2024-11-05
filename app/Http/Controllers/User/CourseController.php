@@ -56,7 +56,7 @@ class CourseController extends Controller
 
         $conflictCheck = $course->validateScheduleConflict($id=null, $request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {
-            return redirect()->back()
+            return back()
                 ->with('error', sprintf(
                     'Course schedule conflict with course "%s" (from %s to %s)',
                     $conflictCheck['conflictWith']['name'],

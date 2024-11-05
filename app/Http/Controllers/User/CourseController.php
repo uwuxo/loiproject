@@ -57,7 +57,7 @@ class CourseController extends Controller
         $conflictCheck = $course->validateScheduleConflict($id=null, $request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {
             return back()
-                ->with('error', sprintf(
+                ->withErrors('error', sprintf(
                     'Course schedule conflict with course "%s" (from %s to %s)',
                     $conflictCheck['conflictWith']['name'],
                     Carbon::parse($conflictCheck['conflictWith']['start_date'])->format('d/m/Y'),
@@ -93,8 +93,8 @@ class CourseController extends Controller
         ]);
         $conflictCheck = $updatedCourse->validateScheduleConflict($id,$request->rooms ?? null);
         if ($conflictCheck['hasConflict']) {
-            return redirect()->back()
-                ->with('error', sprintf(
+            return back()
+                ->withErrors('error', sprintf(
                     'Course schedule conflict with course "%s" (from %s to %s)',
                     $conflictCheck['conflictWith']['name'],
                     Carbon::parse($conflictCheck['conflictWith']['start_date'])->format('d/m/Y'),

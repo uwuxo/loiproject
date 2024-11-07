@@ -43,7 +43,7 @@ Home | Security card project
                                                 @if ($rooms)
                                                 @foreach ($rooms as $room)
                                                 <tr>
-                                                    <td>{{ $room->name }}</td>
+                                                    <td><a href="{{ route('loggeds.room', $room->id) }}">{{ $room->name }}</a></td>
                                                     <td>
                                                         @if ($room->logged->count() == 0)
                                                             <span>{{ $room->logged->count() }}</span>

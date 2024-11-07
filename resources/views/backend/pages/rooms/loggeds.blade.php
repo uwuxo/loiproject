@@ -24,7 +24,7 @@ Room Logged - Admin Panel
                 <h4 class="page-title pull-left">Room Logged</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('group.index') }}">Courses</a></li>
+                    <li><a href="{{ route('logged') }}">Logged In</a></li>
                     <li><span>{{ $room->name }}</span></li>
                 </ul>
             </div>

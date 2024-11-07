@@ -30,26 +30,18 @@ Home | Security card project
                 <div class="card-body">
                     <h4 class="header-title">Logged In Users {{ $loggeds }}</h4>
                     <div class="data-tables">
-                        <table id="dataTable"  class="table">
-                            <thead class="bg-light text-capitalize">
-                                <tr>
-                                    <th width="100%">Rooms</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($courses as $course)
-                                <tr>
-                                    <td>
-                                        <table>
+                        
+                                        <table class="table w-100%">
                                             <thead>
                                                 <tr>
                                                     <th width="30%">Room</th>
-                                                    <th width="10%" style="min-width: 100px;">Total</th>
+                                                    <th width="10%">Total</th>
                                                     <th width="60%">Users</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($course->rooms as $room)
+                                                @if ($rooms)
+                                                @foreach ($rooms as $room)
                                                 <tr>
                                                     <td>{{ $room->name }}</td>
                                                     <td>
@@ -68,19 +60,19 @@ Home | Security card project
                                                     </td>
                                                 </tr>
                                                 @endforeach
+                                                @else
+                                                <tr>
+                                                    <td colspan="3" class="text-center">No rooms found</td>
+                                                </tr>
+                                                @endif
+                                                
                                             </tbody>
                                         </table>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        {{ $courses->links() }}
+        {{ $rooms->links() }}
     </div>
 </div>
 @endsection

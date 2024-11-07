@@ -28,9 +28,9 @@ class HomeController extends Controller
         // })->get();
         //$total = $loggedInUsers->count();
         $loggeds = Logged::count();
-        $courses = Course::paginate(20);
+        $rooms = Room::paginate(20);
         
-        return view('logged',compact('loggeds', 'courses'));
+        return view('logged',compact('loggeds', 'rooms'));
     }
 
     public function getAttendanceReport(Request $request)

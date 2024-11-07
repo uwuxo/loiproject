@@ -21,12 +21,6 @@ class LoginController extends Controller
     {
         $user = User::where('username', $request->input('username'))->where('status', true)->first();
 
-        // if($user->canLoginRoom($request->input('room'))){
-        //     return 'ok';
-        // }else{
-        //     return 'fail';
-        // }
-
         if(!$token = $user->canLoginRoom($request->input('room'))){
             throw ValidationException::withMessages([
                 "The credentials you entered are incorrect"

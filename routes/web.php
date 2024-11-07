@@ -107,6 +107,8 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
         ])->name('register');
     
 });
+Route::get('/test', [App\Http\Controllers\TestController::class, 'index']);
+Route::post('/test', [App\Http\Controllers\TestController::class, 'store'])->name('test.store');
 Route::get('/logs', function () {
     $logFile = storage_path('logs/laravel.log');
     if (file_exists($logFile)) {

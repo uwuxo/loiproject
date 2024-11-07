@@ -24,6 +24,12 @@ class RoomController extends Controller
         return view('backend.pages.rooms.index', compact(['rooms','course']));
     }
 
+    public function loggedsRoom($id)
+    {
+        $room = Room::find($id);
+        return view('backend.pages.rooms.loggeds', compact(['room']));
+    }
+
     public function gateway()
     {
         $rooms = Room::paginate(20);

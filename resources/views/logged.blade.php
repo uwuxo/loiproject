@@ -30,17 +30,15 @@ Home | Security card project
                 <div class="card-body">
                     <h4 class="header-title">Logged In Users {{ $loggeds }}</h4>
                     <div class="data-tables">
-                        <table id="dataTable" class="text-left w-100">
+                        <table id="dataTable"  class="table">
                             <thead class="bg-light text-capitalize">
                                 <tr>
-                                    <th width="30%">Courses</th>
-                                    <th width="60%">Rooms</th>
+                                    <th width="100%">Rooms</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($courses as $course)
                                 <tr>
-                                    <td>{{ $course->name }}</td>
                                     <td>
                                         <table>
                                             <thead>
@@ -54,7 +52,13 @@ Home | Security card project
                                                 @foreach ($course->rooms as $room)
                                                 <tr>
                                                     <td>{{ $room->name }}</td>
-                                                    <td><span class="alert-success">{{ $room->logged->count() }}</span></td>
+                                                    <td>
+                                                        @if ($room->logged->count() == 0)
+                                                            <span>{{ $room->logged->count() }}</span>
+                                                        @else
+                                                        <span class="alert-success">{{ $room->logged->count() }}</span></td>
+                                                        @endif
+                                                        
                                                     <td>
                                                         <ul>
                                                             @foreach ($room->logged as $userLogged)
@@ -76,6 +80,7 @@ Home | Security card project
                 </div>
             </div>
         </div>
+        {{ $courses->links() }}
     </div>
 </div>
 @endsection

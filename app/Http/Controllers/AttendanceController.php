@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Course;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -64,19 +65,35 @@ class AttendanceController extends Controller
 
     public function getAttendanceReport(Request $request)
     {
-        $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'start_date' => 'date',
-            'end_date' => 'date|after_or_equal:start_date'
-        ]);
+        $attendances = [];
+        if ($request->has('course_id') && $request->has('room_id') && $request->has('start_date') && $request->has('end_date')) {
+            $validated = $request->validate([
+                'course_id' => 'required|exists:courses,id',
+                'room_id' => 'required|exists:rooms,id',
+                'start_date' => 'date',
+                'end_date' => 'date|after_or_equal:start_date'
+            ]);
 
-        $attendances = Attendance::where('course_id', $validated['course_id'])
+            $attendances = Attendance::where('course_id', $validated['course_id'])
+            ->where('room_id', $validated['room_id'])
             ->whereBetween('attendance_date', [
                 $validated['start_date'] ?? now()->startOfMonth(),
                 $validated['end_date'] ?? now()->endOfMonth()
             ])
             ->get();
+        }
 
-        return response()->json($attendances);
+        $courses = Course::select('id', 'name')->get();
+        $rooms = Room::select('id', 'name')->get();
+
+        
+
+        //return response()->json($attendances);
+
+        return view('backend.pages.attendances.index', [
+            'attendances' => $attendances,
+            'courses' => $courses,
+            'rooms' => $rooms
+        ]);
     }
 }

@@ -49,7 +49,7 @@
                         <div class="clearfix"></div>
                         <div class="data-tables">
                             @include('backend.layouts.partials.messages')
-                            <table>
+                            <table class="table w-100%">
                                 <thead class="bg-light text-capitalize">
                                     <tr>
                                         <th width="30%">Name</th>
@@ -71,7 +71,7 @@
                                             <td>
                                                 @if ($group->rooms)
                                                     @foreach ($group->rooms as $room)
-                                                        <p>{{ $room->name }}</p>
+                                                        <p><a href="{{ route('loggeds.room', $group->id) }}">{{ $room->name }}</a></p>
                                                     @endforeach
                                                 @endif
                                             </td>

@@ -51,7 +51,7 @@ Room - Admin Panel
                     <div class="clearfix"></div>
                     <div class="data-tables">
                         @include('backend.layouts.partials.messages')
-                        <table>
+                        <table class="table w-100%">
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="30%">Name</th>
@@ -64,7 +64,7 @@ Room - Admin Panel
                             <tbody>
                                 @foreach ($rooms as $room)
                                <tr>
-                                    <td>{{ $room->name }}</td>
+                                    <td><a href="{{ route('loggeds.room', $room->id) }}">{{ $room->name }}</a></td>
                                     <td class="pt-3">
                                         @if ($room->courses)
                                         @foreach ($room->courses as $course)

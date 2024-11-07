@@ -50,7 +50,7 @@ Users - Admin Panel
                     <div class="clearfix"></div>
                     <div class="data-tables">
                         @include('backend.layouts.partials.messages')
-                        <table>
+                        <table class="table w-100%">
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="15%">Name</th>

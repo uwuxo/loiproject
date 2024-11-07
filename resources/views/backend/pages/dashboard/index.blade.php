@@ -29,10 +29,10 @@ Dashboard Page - Admin Panel
 
 <div class="main-content-inner">
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="row">
             @hasanyrole('super-admin|course-admin|course-edit|course-view')
-            <div class="col-md-6 mt-5 mb-3">
+            <div class="col-md-4 mt-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg1">
                         <a href="{{ route('group.index') }}">
@@ -46,7 +46,7 @@ Dashboard Page - Admin Panel
             </div>
             @endhasanyrole
             @hasanyrole('super-admin|user-admin|user-edit|user-view')
-            <div class="col-md-6 mt-md-5 mb-3">
+            <div class="col-md-4 mt-md-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg2">
                         <a href="{{ route('users.index') }}">
@@ -60,7 +60,7 @@ Dashboard Page - Admin Panel
             </div>
             @endhasanyrole
             @hasanyrole('super-admin|course-admin|course-edit')
-            <div class="col-md-6 mt-md-5 mb-3">
+            <div class="col-md-4 mt-md-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg1">
                         <a href="{{ route('gateway') }}">
@@ -74,13 +74,27 @@ Dashboard Page - Admin Panel
             </div>
             @endhasanyrole
             @hasanyrole('super-admin|course-admin|course-edit|course-view|user-admin|user-edit|user-view')            
-            <div class="col-md-6 mt-md-5 mb-3">
+            <div class="col-md-4 mt-md-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg3">
                         <a href="{{ route('logged') }}">
                             <div class="p-4 d-flex justify-content-between align-items-center">
                                 <div class="seofct-icon"><i class="fa fa-users"></i> Logged In Users API</div>
                                 <h2>{{ $loggedInUsers }}</h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endhasanyrole
+            @hasanyrole('super-admin|course-admin|course-edit|course-view')            
+            <div class="col-md-4 mt-md-5 mb-3">
+                <div class="card">
+                    <div class="seo-fact sbg2">
+                        <a href="{{ route('attendance') }}">
+                            <div class="p-4 d-flex justify-content-between align-items-center">
+                                <div class="seofct-icon"><i class="fa fa-calculator"></i> Attendees</div>
+                                <h2></h2>
                             </div>
                         </a>
                     </div>

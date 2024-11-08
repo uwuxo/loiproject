@@ -44,23 +44,29 @@
                         <div class="float-right mb-2">
                             <form action="" method="GET">
                                 <div class="input-group">
-                                    <input name="start_date" type="date" class="form-control date" placeholder="Start Date" required>
-                                    <input name="end_date" type="date" class="form-control" placeholder="End Date" required>
+                                    <input name="start_date" type="date" class="form-control date" value="{{ $validated['start_date'] ?? ''}}" placeholder="Start Date" required>
+                                    <input name="end_date" type="date" class="form-control" value="{{ $validated['end_date'] ?? ''}}" placeholder="End Date" required>
                                     <select name="course_id" class="input-group-append" required>
                                         @foreach ($courses as $course)
                                             <option value="">Choose Course</option>
-                                            <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                            <option {{ $validated['course_id'] ?? null == $course->id ? 'selected' : ''}} value="{{ $course->id }}">{{ $course->name }}</option>
                                         @endforeach
                                     </select>
                                     <select name="room_id" class="input-group-append" required>
                                         <option value="">Choose Room</option>
                                         @foreach ($rooms as $room)
-                                            <option value="{{ $room->id }}">{{ $room->name }}</option>
+                                            <option {{ $validated['room_id'] ?? null == $room->id ? 'selected' : ''}} value="{{ $room->id }}">{{ $room->name }}</option>
                                         @endforeach
                                     </select>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>
                                     </div>
+                                    @if(request()->query())
+                                    <div class="input-group-append">
+                                    <a href="{{ route('attendance.export', request()->query()) }}" class="btn btn-success">
+                                        Export to Excel
+                                    </a></div>
+                                    @endif
                                 </div>
                             </form>
                         </div>

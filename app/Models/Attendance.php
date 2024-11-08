@@ -27,4 +27,24 @@ class Attendance extends Model
     {
         return $this->belongsTo(Room::class);
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['course_id'] ?? false, function ($query, $course_id) {
+            return $query->where(function ($query) use ($course_id) {
+                $query->where('course_id', $course_id);
+            });
+        });
+
+        $query->when($filters['room_id'] ?? false, function ($query, $room_id) {
+            return $query->where('room_id', $room_id);
+        });
+
+        $query->when($filters['attendance_date'] ?? false, function ($query, $date) {
+            return $query->whereBetween('attendance_date', [
+                $filters['start_date'] ?? now()->startOfMonth(),
+                $filters['end_date'] ?? now()->endOfMonth()
+            ]);
+        });
+    }
 }

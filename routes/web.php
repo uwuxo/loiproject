@@ -41,6 +41,7 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
     Route::get('/dashboard', [UserNewController::class, 'dashboard'])->name('dashboard');
     Route::get('/logged', [App\Http\Controllers\HomeController::class, 'loggedIn'])->name('logged');
     Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'getAttendanceReport'])->name('attendance');
+    Route::get('/attendance/export', [App\Http\Controllers\AttendanceController::class, 'export'])->name('attendance.export');
 
 //User
     Route::get('/users', [UserNewController::class, 'index'])->middleware([
@@ -77,9 +78,7 @@ Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
 
     Route::get('/gateway', [RoomController::class, 'gateway'])->name('gateway');
     Route::get('/logged-room/{id}', [RoomController::class, 'loggedsRoom'])->name('loggeds.room');
-    Route::prefix('attendance')->group(function() {
-        Route::get('/report', [HomeController::class, 'getAttendanceReport']);
-    });
+
 //Room
     // Route::get('/rooms/{id}', [RoomController::class, 'index'])->middleware([
     //     'role:super-admin|group-admin|group-edit|group-view'

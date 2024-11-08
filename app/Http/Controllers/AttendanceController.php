@@ -7,6 +7,8 @@ use App\Models\Course;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Exports\AttendanceExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AttendanceController extends Controller
 {
@@ -93,7 +95,26 @@ class AttendanceController extends Controller
         return view('backend.pages.attendances.index', [
             'attendances' => $attendances,
             'courses' => $courses,
-            'rooms' => $rooms
+            'rooms' => $rooms,
+            'validated' => $validated ?? []
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $validated = $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'room_id' => 'required|exists:rooms,id',
+            'start_date' => 'date',
+            'end_date' => 'date|after_or_equal:start_date'
+        ]);
+
+        $filename = sprintf(
+            'attendance_report_%s_to_%s.xlsx',
+            Carbon::parse($validated['start_date'] ?? now()->startOfMonth())->format('Y-m-d'),
+            Carbon::parse($validated['end_date'] ?? now()->endOfMonth())->format('Y-m-d')
+        );
+
+        return Excel::download(new AttendanceExport($validated), $filename);
     }
 }

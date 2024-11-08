@@ -76,7 +76,8 @@
                             <table class="table w-100%">
                                 <thead class="bg-light text-capitalize">
                                     <tr>
-                                        <th width="30%">Course</th>
+                                        <th width="20%">User</th>
+                                        <th width="20%">Course</th>
                                         <th width="10%">Rooms</th>
                                         <th width="10%">Date</th>
                                         <th width="10%">Check-in Time</th>
@@ -88,6 +89,7 @@
                                     @if (count($attendances) > 0)
                                         @foreach ($attendances as $attendance)
                                             <tr>
+                                                <td>{{ $attendance->user->name }}</td>
                                                 <td>{{ $attendance->course->name }}</td>
                                                 <td>{{ $attendance->room->name }}</td>
                                                 <td>{{ $attendance->attendance_date }}

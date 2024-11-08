@@ -33,6 +33,7 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
+            'User',
             'Course',
             'Rooms',
             'Date',
@@ -43,6 +44,7 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
     public function map($attendance): array
     {
         return [
+            $attendance->user->name ?? 'N/A',
             $attendance->course->name ?? 'N/A',
             $attendance->room->name ?? 'N/A',
             $attendance->attendance_date,

@@ -78,7 +78,7 @@
                                             <td>
 
                                             
-                                        <div class="weekly-schedule">
+                                    <div class="weekly-schedule">
                                         @php
                                             $days = [
                                                 'monday' => 'Monday',
@@ -112,7 +112,7 @@
                                             </div>
                                             @endif
                                             @endforeach
-                                        </div>
+                                    </div>
                                             </td>
                                             <td>
                                                 {{ Carbon\Carbon::parse($group->start_date)->format('d/m/Y') }}

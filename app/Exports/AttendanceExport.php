@@ -19,21 +19,29 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return Attendance::where('course_id', $this->filters['course_id'])
-        ->where('room_id', $this->filters['room_id'])
-        ->whereBetween('attendance_date', [
+        $query = Attendance::query();
+
+        if(isset($this->filters['search']) && !empty($this->filters['search']))
+        $query->whereRelation('user', 'name', 'like', '%' . $this->filters['search'] . '%');
+        if (isset($this->filters['course_id']) && !empty($this->filters['course_id']))
+        $query->where('course_id', $this->filters['course_id']);
+        if (isset($this->filters['room_id']) && !empty($this->filters['room_id']))
+        $query->where('room_id', $this->filters['room_id']);
+        $query->whereBetween('attendance_date', [
             $this->filters['start_date'] ?? now()->startOfMonth(),
             $this->filters['end_date'] ?? now()->endOfMonth()
-        ])
-            //->with(['course', 'room']) // Assuming you have these relationships
-            ->get();
+        ]);
+        $attendances = $query->get();
+
+        return $attendances;
     }
 
 
     public function headings(): array
     {
         return [
-            'User',
+            'User Name',
+            'UID',
             'Course',
             'Rooms',
             'Date',
@@ -45,6 +53,7 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $attendance->user->name ?? 'N/A',
+            $attendance->user->username ?? 'N/A',
             $attendance->course->name ?? 'N/A',
             $attendance->room->name ?? 'N/A',
             $attendance->attendance_date,

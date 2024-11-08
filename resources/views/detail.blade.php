@@ -15,6 +15,7 @@ Home | Security card project
                     @hasanyrole('super-admin|course-admin|course-edit|course-view|user-admin|user-edit|user-view')
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                     @endhasanyrole
+                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li><span>{{ auth()->user()->type }}</span></li>
                 </ul>
             </div>
@@ -33,11 +34,12 @@ Home | Security card project
                     <h4 class="header-title">Course Infomation</h4>
                     <div class="data-tables">
                         @if (!empty($course))
-                        <table id="dataTable" class="text-left w-100">
+                        <table id="dataTable" class="table text-left w-100">
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="30%">Courses</th>                                    
-                                    <th width="30%">Description</th>
+                                    <th width="20%">Description</th>
+                                    <th width="30%">Schedule</th>
                                     <th width="15%">Start date</th>
                                     <th width="15%">End date</th>
                                 </tr>
@@ -46,6 +48,41 @@ Home | Security card project
                                 <tr>
                                     <td>{{ $course->name }}</td>                                    
                                     <td>{{ $course->description }}</td>
+                                    <td><div class="weekly-schedule">
+                                        @php
+                                            $days = [
+                                                'monday' => 'Monday',
+                                                'tuesday' => 'Tuesday',
+                                                'wednesday' => 'Wednesday',
+                                                'thursday' => 'Thursday',
+                                                'friday' => 'Friday',
+                                                'saturday' => 'Saturday',
+                                                'sunday' => 'Sunday',
+                                            ];
+                                            $schedule = $course->schedule;
+                                        @endphp
+                                                    
+                                            @foreach ($days as $dayKey => $dayLabel)
+                                            @if (!empty($schedule[$dayKey]['start_time']))
+                                            <div class="card">
+                                                <div class="pt-3">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-12">
+                                                            <div class="row time-inputs">
+                                                                <div class="col-md-5">
+                                                                    <div class="">{{ $dayLabel }}</div>    
+                                                                </div>
+                                                                <div class="col-md-7">
+                                                                    <div class="">{{ $schedule[$dayKey]['start_time'] }} - {{ $schedule[$dayKey]['end_time'] }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endif
+                                            @endforeach
+                                    </div></td>
                                     <td>{{ Carbon\Carbon::parse($course->start_date)->format('d/m/Y') }}</td>
                                     <td>{{ Carbon\Carbon::parse($course->end_date)->format('d/m/Y') }}</td>
                                 </tr>
@@ -59,13 +96,12 @@ Home | Security card project
                 <div class="card-body">
                     <h4 class="header-title">Rooms List</h4>
                     <div class="data-tables">
-                        <table id="dataTable" class="text-left w-100">
+                        <table id="dataTable" class="table text-left w-100">
                             <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th width="30%">Rooms</th>
-                                    <th width="10%">Start time</th>
-                                    <th width="10%">End time</th>
-                                    <th width="30%">Days</th>
+                                    <th width="10%">Total</th>
+                                    <th>Users</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,35 +111,18 @@ Home | Security card project
                                 @foreach ($rooms as $room)
                                 <tr>
                                     <td>{{ $room->name }}</td>
-                                    <td>{{ $room->start_time }}</td>
-                                    <td>{{ $room->end_time }}</td>
                                     <td>
-                                        @php
-                                        $allowed_days = [];
-                                        $allowed_days = json_decode($room->allowed_days, true);
-                                        @endphp
-                                        @if (!empty($allowed_days))
-                                        @if(in_array(1, $allowed_days))
-                                        <p>Monday</p>
+                                        @if ($room->logged->count() == 0)
+                                            <span>{{ $room->logged->count() }}</span>
+                                        @else
+                                        <span class="alert-success">{{ $room->logged->count() }}</span>
                                         @endif
-                                        @if(in_array(2, $allowed_days))
-                                        <p>Tuesday</p>
-                                        @endif
-                                        @if(in_array(3, $allowed_days))
-                                        <p>Wednesday</p>
-                                        @endif
-                                        @if(in_array(4, $allowed_days))
-                                        <p>Thursday</p>
-                                        @endif
-                                        @if(in_array(5, $allowed_days))
-                                        <p>Friday</p>
-                                        @endif
-                                        @if(in_array(6, $allowed_days))
-                                        <p>Saturday</p>
-                                        @endif
-                                        @if(in_array(0, $allowed_days))
-                                        <p>Sunday</p>
-                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($room->logged->count())
+                                        @foreach ($room->logged as $logged)
+                                            <span class="alert-success">{{ $logged->user->name }}</span>
+                                        @endforeach
                                         @endif
                                     </td>
                                 </tr>

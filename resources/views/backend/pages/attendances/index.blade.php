@@ -23,7 +23,7 @@
                     <h4 class="page-title pull-left">Attendances</h4>
                     <ul class="breadcrumbs pull-left">
                         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li><span>All Courses</span></li>
+                        <li><span>Attendances</span></li>
                     </ul>
                 </div>
             </div>
@@ -44,15 +44,16 @@
                         <div class="float-right mb-2">
                             <form action="" method="GET">
                                 <div class="input-group">
+                                    <input name="search" type="text" class="form-control" value="{{ $validated['search'] ?? ''}}" placeholder="Search for User">
                                     <input name="start_date" type="date" class="form-control date" value="{{ $validated['start_date'] ?? ''}}" placeholder="Start Date" required>
                                     <input name="end_date" type="date" class="form-control" value="{{ $validated['end_date'] ?? ''}}" placeholder="End Date" required>
-                                    <select name="course_id" class="input-group-append" required>
+                                    <select name="course_id" class="input-group-append">
                                         @foreach ($courses as $course)
                                             <option value="">Choose Course</option>
                                             <option {{ $validated['course_id'] ?? null == $course->id ? 'selected' : ''}} value="{{ $course->id }}">{{ $course->name }}</option>
                                         @endforeach
                                     </select>
-                                    <select name="room_id" class="input-group-append" required>
+                                    <select name="room_id" class="input-group-append">
                                         <option value="">Choose Room</option>
                                         @foreach ($rooms as $room)
                                             <option {{ $validated['room_id'] ?? null == $room->id ? 'selected' : ''}} value="{{ $room->id }}">{{ $room->name }}</option>
@@ -60,6 +61,9 @@
                                     </select>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <a href="{{ route('attendance') }}" class="btn btn-secondary">Reset</a>
                                     </div>
                                     @if(request()->query())
                                     <div class="input-group-append">
@@ -76,13 +80,14 @@
                             <table class="table w-100%">
                                 <thead class="bg-light text-capitalize">
                                     <tr>
-                                        <th width="20%">User</th>
+                                        <th width="20%">User Name</th>
+                                        <th width="10%">UID</th>
                                         <th width="20%">Course</th>
                                         <th width="10%">Rooms</th>
                                         <th width="10%">Date</th>
-                                        <th width="10%">Check-in Time</th>
-                                        <th width="10%">Check-out Time</th>
-                                        <th width="10%">Status</th>
+                                        <th width="13%">Check-in Time</th>
+                                        <th width="13%">Check-out Time</th>
+                                        <th width="5%">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -90,6 +95,7 @@
                                         @foreach ($attendances as $attendance)
                                             <tr>
                                                 <td>{{ $attendance->user->name }}</td>
+                                                <td>{{ $attendance->user->username }}</td>
                                                 <td>{{ $attendance->course->name }}</td>
                                                 <td>{{ $attendance->room->name }}</td>
                                                 <td>{{ $attendance->attendance_date }}

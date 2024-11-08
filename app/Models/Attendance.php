@@ -30,6 +30,12 @@ class Attendance extends Model
 
     public function scopeFilter($query, array $filters)
     {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            return $query->whereRelation('user', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            });
+        });
+
         $query->when($filters['course_id'] ?? false, function ($query, $course_id) {
             return $query->where(function ($query) use ($course_id) {
                 $query->where('course_id', $course_id);

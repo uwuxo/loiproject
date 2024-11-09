@@ -8,6 +8,7 @@ use App\Models\Room;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Exports\AttendanceExport;
+use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AttendanceController extends Controller
@@ -101,6 +102,9 @@ class AttendanceController extends Controller
 
         $courses = Course::select('id', 'name')->get();
         $rooms = Room::select('id', 'name')->get();
+        if(auth()->user()->type == 'teacher'){
+            $courses = User::find(auth()->user()->id)->courses()->select('id', 'name')->get();
+        }
 
         
 

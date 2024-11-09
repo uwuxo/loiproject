@@ -22,6 +22,7 @@
                 <div class="breadcrumbs-area clearfix">
                     <h4 class="page-title pull-left">Attendances</h4>
                     <ul class="breadcrumbs pull-left">
+                        <li><a href="{{ route('home') }}">Home</a></li>
                         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li><span>Attendances</span></li>
                     </ul>
@@ -48,16 +49,24 @@
                                     <input name="start_date" type="date" class="form-control date" value="{{ $validated['start_date'] ?? ''}}" placeholder="Start Date" required>
                                     <input name="end_date" type="date" class="form-control" value="{{ $validated['end_date'] ?? ''}}" placeholder="End Date" required>
                                     <select name="course_id" class="input-group-append">
+                                        <option value="">Choose Course</option>
                                         @foreach ($courses as $course)
-                                            <option value="">Choose Course</option>
                                             <option {{ $validated['course_id'] ?? null == $course->id ? 'selected' : ''}} value="{{ $course->id }}">{{ $course->name }}</option>
                                         @endforeach
                                     </select>
                                     <select name="room_id" class="input-group-append">
                                         <option value="">Choose Room</option>
+                                        @if (auth()->user()->type == 'teacher')
+                                        @foreach ($courses as $course)
+                                        @foreach ($course->rooms as $room)
+                                            <option {{ $validated['room_id'] ?? null == $room->id ? 'selected' : ''}} value="{{ $room->id }}">{{ $room->name }}</option>
+                                        @endforeach
+                                        @endforeach
+                                        @else
                                         @foreach ($rooms as $room)
                                             <option {{ $validated['room_id'] ?? null == $room->id ? 'selected' : ''}} value="{{ $room->id }}">{{ $room->name }}</option>
                                         @endforeach
+                                        @endif
                                     </select>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>

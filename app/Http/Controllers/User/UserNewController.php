@@ -65,6 +65,10 @@ class UserNewController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        if ($request->roles && $request->type != 'admin') {
+            return back()->with('error', 'You cannot assign roles to a non-admin user.');
+        }
+
         // Cập nhật thông tin người dùng
         $user->name = $request->name;
         $user->username = $request->username;
@@ -79,7 +83,7 @@ class UserNewController extends Controller
         $user->courses()->sync($request->groups);
 
         $user->roles()->detach();
-        if ($request->roles) {
+        if ($request->roles && $request->type == 'admin') {
             $user->assignRole($request->roles);
         }
 

@@ -44,8 +44,8 @@ Dashboard Page - Admin Panel
                     </div>
                 </div>
             </div>
-            @endif
-            @hasanyrole('super-admin|course-admin|course-edit|course-view')
+            @else
+@hasanyrole('super-admin|course-admin|course-edit|course-view')
             <div class="col-md-4 mt-5 mb-3">
                 <div class="card">
                     <div class="seo-fact sbg1">
@@ -115,6 +115,8 @@ Dashboard Page - Admin Panel
                 </div>
             </div>
             @endhasanyrole
+            @endif
+            
         </div>
     </div>
   </div>

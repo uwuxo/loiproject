@@ -33,6 +33,10 @@ class RegisterNewController extends Controller
             //'allowed_days' => ['required', 'array'], // Validate rằng user đã chọn các ngày
         ]);
 
+        if ($request->roles && $request->type != 'admin') {
+            return back()->with('error', 'You cannot assign roles to a non-admin user.');
+        }
+
         //$allowedDays = json_encode($request->allowed_days);
         // Create user
         $user = User::create([
@@ -49,7 +53,7 @@ class RegisterNewController extends Controller
             $user->courses()->attach($request->groups);
         }
         
-        if($user && !empty($request->roles)){
+        if($user && $request->type == 'admin' && !empty($request->roles)){
         $user->assignRole($request->roles);
         }
 

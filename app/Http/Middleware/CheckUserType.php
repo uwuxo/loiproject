@@ -16,7 +16,7 @@ class CheckUserType
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->type == 'admin') {
+        if (Auth::check() && in_array(Auth::user()->type, ['admin', 'teacher'])) {
             return $next($request);
         }
         return redirect()->route('home');

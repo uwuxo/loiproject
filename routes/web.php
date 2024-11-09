@@ -31,17 +31,20 @@ Route::get('/', function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::get('course/detail/{id}', [App\Http\Controllers\HomeController::class, 'detail'])->name('detail')->middleware('auth');
+Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'getAttendanceReport'])->name('attendance')
+->middleware(['auth', 'user.type:teacher']);
+Route::get('/attendance/export', [App\Http\Controllers\AttendanceController::class, 'export'])->name('attendance.export')
+->middleware(['auth', 'user.type:teacher']);
 
 Route::get('/login', [LoginNewController::class, 'login'])->name('users.login');
 Route::post('/user-login', [LoginNewController::class, 'loginOnPage'])->name('login')->middleware('guest');
 Route::prefix('/user')->middleware('auth')->group(function(){
     Route::get('show', [UserShowController::class, 'show'])->name('show.user');
 });
-Route::prefix('/admin')->middleware(['auth', 'user.type'])->group(function(){
+Route::prefix('/admin')->middleware(['auth', 'user.type:admin'])->group(function(){
     Route::get('/dashboard', [UserNewController::class, 'dashboard'])->name('dashboard');
     Route::get('/logged', [App\Http\Controllers\HomeController::class, 'loggedIn'])->name('logged');
-    Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'getAttendanceReport'])->name('attendance');
-    Route::get('/attendance/export', [App\Http\Controllers\AttendanceController::class, 'export'])->name('attendance.export');
+
 
 //User
     Route::get('/users', [UserNewController::class, 'index'])->middleware([

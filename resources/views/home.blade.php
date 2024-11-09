@@ -15,6 +15,9 @@ Home | Security card project
                     @hasanyrole('super-admin|course-admin|course-edit|course-view|user-admin|user-edit|user-view')
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                     @endhasanyrole
+                    @if (auth()->user()->type == 'teacher')
+                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    @endif
                     <li><span>{{ $user->type }}</span></li>
                 </ul>
             </div>

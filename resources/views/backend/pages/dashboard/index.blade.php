@@ -31,6 +31,20 @@ Dashboard Page - Admin Panel
   <div class="row">
     <div class="col-lg-12">
         <div class="row">
+            @if (auth()->user()->type == 'teacher')
+            <div class="col-md-4 mt-md-5 mb-3">
+                <div class="card">
+                    <div class="seo-fact sbg2">
+                        <a href="{{ route('attendance') }}">
+                            <div class="p-4 d-flex justify-content-between align-items-center">
+                                <div class="seofct-icon"><i class="fa fa-calculator"></i> Attendees</div>
+                                <h2></h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endif
             @hasanyrole('super-admin|course-admin|course-edit|course-view')
             <div class="col-md-4 mt-5 mb-3">
                 <div class="card">

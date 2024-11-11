@@ -48,25 +48,14 @@
                                     <input name="search" type="text" class="form-control" value="{{ $validated['search'] ?? ''}}" placeholder="Search for User">
                                     <input name="start_date" type="date" class="form-control date" value="{{ $validated['start_date'] ?? ''}}" placeholder="Start Date" required>
                                     <input name="end_date" type="date" class="form-control" value="{{ $validated['end_date'] ?? ''}}" placeholder="End Date" required>
-                                    <select name="course_id" class="input-group-append">
+                                    <select id="course" name="course_id" class="input-group-append">
                                         <option value="">Choose Course</option>
                                         @foreach ($courses as $course)
-                                            <option {{ $validated['course_id'] ?? null == $course->id ? 'selected' : ''}} value="{{ $course->id }}">{{ $course->name }}</option>
+                                            <option {{ isset($validated['course_id']) && $validated['course_id'] == $course->id ? 'selected' : ''}} value="{{ $course->id }}">{{ $course->name }}</option>
                                         @endforeach
                                     </select>
-                                    <select name="room_id" class="input-group-append">
+                                    <select id="room" name="room_id" class="input-group-append">
                                         <option value="">Choose Room</option>
-                                        @if (auth()->user()->type == 'teacher')
-                                        @foreach ($courses as $course)
-                                        @foreach ($course->rooms as $room)
-                                            <option {{ $validated['room_id'] ?? null == $room->id ? 'selected' : ''}} value="{{ $room->id }}">{{ $room->name }}</option>
-                                        @endforeach
-                                        @endforeach
-                                        @else
-                                        @foreach ($rooms as $room)
-                                            <option {{ $validated['room_id'] ?? null == $room->id ? 'selected' : ''}} value="{{ $room->id }}">{{ $room->name }}</option>
-                                        @endforeach
-                                        @endif
                                     </select>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>
@@ -135,5 +124,51 @@
 
         </div>
     </div>
+@endsection
+@section('scripts')
+<script>    
+    $(document).ready(function() {
+        @if (isset($validated['course_id']) && $validated['room_id'])
+        var courseId = {{ $validated['course_id'] }};
+            if (courseId) {
+                $.ajax({
+                    url: '{{ route("get-rooms") }}',
+                    type: "GET",
+                    data: { course_id: courseId },
+                    success: function(data) {
+                        $('#room').empty();
+                        $('#room').append('<option value="">Choose Room</option>');
+                        $.each(data, function(key, value) {
+                            $('#room').append('<option value="' + value.id + '"' + (value.id === {{ $validated['room_id'] }} ? ' selected' : '') + '>' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#room').empty();
+                $('#room').append('<option value="">Choose Room</option>');
+            }
+    @endif
+        $('#course').on('change', function() {
+            var courseId = $(this).val();
+            if (courseId) {
+                $.ajax({
+                    url: '{{ route("get-rooms") }}',
+                    type: "GET",
+                    data: { course_id: courseId },
+                    success: function(data) {
+                        $('#room').empty();
+                        $('#room').append('<option value="">Choose Room</option>');
+                        $.each(data, function(key, value) {
+                            $('#room').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#room').empty();
+                $('#room').append('<option value="">Choose Room</option>');
+            }
+        });
+    });
+</script>
 @endsection
 

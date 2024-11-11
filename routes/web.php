@@ -35,6 +35,8 @@ Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'ge
 ->middleware(['auth', 'user.type:teacher']);
 Route::get('/attendance/export', [App\Http\Controllers\AttendanceController::class, 'export'])->name('attendance.export')
 ->middleware(['auth', 'user.type:teacher']);
+Route::get('/get-rooms', [App\Http\Controllers\AttendanceController::class, 'getRoom'])->name('get-rooms')
+->middleware(['auth', 'user.type:teacher']);
 
 Route::get('/login', [LoginNewController::class, 'login'])->name('users.login');
 Route::post('/user-login', [LoginNewController::class, 'loginOnPage'])->name('login')->middleware('guest');

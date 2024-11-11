@@ -13,6 +13,19 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class AttendanceController extends Controller
 {
+
+    public function getRoom(Request $request) {
+
+        $course = Course::find($request->course_id);
+
+        if(auth()->user()->type == 'teacher'){
+            $course = User::find(auth()->user()->id)->courses()->find($request->course_id);
+        }
+
+        $rooms = $course->rooms()->get();
+
+        return response()->json($rooms);
+    }
     public function checkIn(Request $request)
     {
         $validated = $request->validate([

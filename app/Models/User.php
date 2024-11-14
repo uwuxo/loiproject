@@ -83,6 +83,12 @@ class User extends Authenticatable
         })->get();
         if(!empty($courses)) {
             foreach ($courses as $course) {
+                if ($course->teacher_first && $this->type == 'student') {
+                    $leader = $course->loggeds()->whereRelation('user', 'type', 'teacher')->first();
+                    if (!$leader) {
+                        return false;
+                    }
+                }
                 // Kiểm tra ngày trong khoảng khóa học
                 if ($now->between($course->start_date, $course->end_date)) {
                     // Kiểm tra lịch học của ngày hiện tại

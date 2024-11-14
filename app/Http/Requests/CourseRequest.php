@@ -16,6 +16,8 @@ class CourseRequest extends FormRequest
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         $rules = [
             'name' => 'required|string|max:255',
+            'status' => 'required|boolean',
+            'teacher_first' => 'required|boolean',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ];

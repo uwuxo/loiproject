@@ -57,6 +57,7 @@
                                         <th width="30%">Schedule</th>
                                         <th width="10%">Start date</th>
                                         <th width="10%">End date</th>
+                                        <th width="10%">Teacher First</th>
                                         <th width="5%">Status</th>
                                         {{-- <th width="10%">Created At</th> --}}
                                         @hasanyrole('super-admin|group-admin|group-edit')
@@ -119,6 +120,13 @@
                                             </td>
                                             <td>
                                                 {{ Carbon\Carbon::parse($group->end_date)->format('d/m/Y') }}
+                                            </td>
+                                            <td>
+                                                @if ($group->teacher_first)
+                                                    <span class="badge badge-success">On</span>
+                                                @else
+                                                    <span class="badge badge-danger">Off</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($group->status)

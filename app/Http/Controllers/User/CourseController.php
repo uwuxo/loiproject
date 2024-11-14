@@ -49,6 +49,7 @@ class CourseController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
+            'teacher_first' => $request->teacher_first,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'schedule' => $request->schedule,
@@ -87,6 +88,7 @@ class CourseController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
+            'teacher_first' => $request->teacher_first,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'schedule' => $request->schedule
@@ -107,6 +109,7 @@ class CourseController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
+            'teacher_first' => $request->teacher_first,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'schedule' => $request->schedule

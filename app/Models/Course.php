@@ -10,7 +10,15 @@ use Carbon\Carbon;
 class Course extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','status','start_date','end_date','description','schedule'];
+    protected $fillable = [
+        'name',
+        'status',
+        'start_date',
+        'end_date',
+        'description',
+        'schedule',
+        'teacher_first'
+    ];
     protected $casts = [
         'schedule' => 'array',
     ];

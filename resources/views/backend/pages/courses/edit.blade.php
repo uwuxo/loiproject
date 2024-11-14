@@ -281,16 +281,29 @@ Course Edit - Admin Panel
                                         </div>
                                     </div>
                                     <div class="mt-5">
+                                        <label for="allowed_days" class="form-label">Teacher First</label><br>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="teacher_first"
+                                                {{ $group->teacher_first ? 'checked' : '' }} value="1">
+                                            <label class="form-check-label" for="">On</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="teacher_first"
+                                                {{ !$group->teacher_first ? 'checked' : '' }} value="0">
+                                            <label class="form-check-label" for="">Off</label>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5">
                                         <label for="allowed_days" class="form-label">Status</label><br>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="status"
                                                 {{ $group->status ? 'checked' : '' }} value="1">
-                                            <label class="form-check-label" for="monday">Active</label>
+                                            <label class="form-check-label" for="">Active</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="status"
                                                 {{ !$group->status ? 'checked' : '' }} value="0">
-                                            <label class="form-check-label" for="tuesday">Inactive</label>
+                                            <label class="form-check-label" for="">Inactive</label>
                                         </div>
                                     </div>
                                     

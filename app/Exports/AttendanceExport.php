@@ -11,10 +11,13 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class AttendanceExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $filters;
+    public $range = null;
 
     public function __construct(array $filters)
     {
         $this->filters = $filters;
+        if (isset($this->filters['range']) && !empty($this->filters['range']))
+        $this->range = $this->filters['range'];
     }
 
     public function collection()
@@ -45,7 +48,8 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
             'Course',
             'Rooms',
             'Date',
-            'Status'
+            'Status',
+            ($this->range) ? 'Range' : '',
         ];
     }
 
@@ -58,6 +62,7 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
             $attendance->room->name ?? 'N/A',
             $attendance->attendance_date,
             ($attendance->check_in_time && $attendance->check_out_time) ? 'Complete' : 'Incomplete',
+            ($this->range) ? $attendance->range($attendance->attendance_date . ' ' . $attendance->check_in_time, $attendance->course->schedule, $attendance->check_in_time, $this->range) : '',
         ];
     }
 

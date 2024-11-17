@@ -23,6 +23,27 @@ class Attendance extends Model
         return $this->belongsTo(Course::class);
     }
 
+    public function range($dateTime, $schedule, $now, $plugMin){
+        $day = \Carbon\Carbon::parse($dateTime)->format('l');
+        $days = [
+            'Monday' => 'monday',
+            'Tuesday' => 'tuesday',
+            'Wednesday' => 'wednesday',
+            'Thursday' => 'thursday',
+            'Friday' => 'friday',
+            'Saturday' => 'saturday',
+            'Sunday' => 'sunday',
+        ]; // định nghĩa hàm chuyển đổi
+        $range = $schedule[$days[$day]];
+        if (\Carbon\Carbon::parse($now)->between($range['start_time'], \Carbon\Carbon::parse($range['start_time'])->addMinutes($plugMin))) {
+            return 'On-time';
+        }
+        else{
+            return 'Late';
+        }
+        
+    }
+
     public function room()
     {
         return $this->belongsTo(Room::class);

@@ -88,7 +88,8 @@ class AttendanceController extends Controller
                 'course_id' => 'nullable|exists:courses,id',
                 'room_id' => 'nullable|exists:rooms,id',
                 'start_date' => 'required|date',
-                'end_date' => 'required|date|after_or_equal:start_date'
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'range' => 'nullable'
             ]);
 
             $query =  Attendance::query();
@@ -138,7 +139,8 @@ class AttendanceController extends Controller
             'course_id' => 'nullable|exists:courses,id',
             'room_id' => 'nullable|exists:rooms,id',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'range' => 'nullable'
         ]);
 
         $filename = sprintf(

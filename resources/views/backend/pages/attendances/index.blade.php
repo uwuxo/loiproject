@@ -57,6 +57,16 @@
                                     <select id="room" name="room_id" class="input-group-append">
                                         <option value="">Choose Room</option>
                                     </select>
+                                    <select id="range" name="range" class="input-group-append">
+                                        <option value="">Range</option>
+                                        <option {{ isset($validated['range']) && $validated['range'] == '5' ? 'selected' : ''}} value="5">5 minutes range</option>
+                                        <option {{ isset($validated['range']) && $validated['range'] == '10' ? 'selected' : ''}} value="10">10 minutes range</option>
+                                        <option {{ isset($validated['range']) && $validated['range'] == '15' ? 'selected' : ''}} value="15">15 minutes range</option>
+                                        <option {{ isset($validated['range']) && $validated['range'] == '20' ? 'selected' : ''}} value="20">20 minutes range</option>
+                                        <option {{ isset($validated['range']) && $validated['range'] == '25' ? 'selected' : ''}} value="25">25 minutes range</option>
+                                        <option {{ isset($validated['range']) && $validated['range'] == '30' ? 'selected' : ''}} value="30">30 minutes range</option>
+
+                                    </select>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>
                                     </div>
@@ -78,14 +88,17 @@
                             <table class="table w-100%">
                                 <thead class="bg-light text-capitalize">
                                     <tr>
-                                        <th width="20%">User Name</th>
+                                        <th width="15%">User Name</th>
                                         <th width="10%">UID</th>
                                         <th width="20%">Course</th>
                                         <th width="10%">Rooms</th>
                                         <th width="10%">Date</th>
-                                        <th width="13%">Check-in Time</th>
+                                        <th width="10%">Check-in Time</th>
                                         <th width="13%">Check-out Time</th>
                                         <th width="5%">Status</th>
+                                        @isset($validated['range'])
+                                            <th width="15%">Range</th>
+                                        @endisset
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -96,8 +109,7 @@
                                                 <td>{{ $attendance->user->username }}</td>
                                                 <td>{{ $attendance->course->name }}</td>
                                                 <td>{{ $attendance->room->name }}</td>
-                                                <td>{{ $attendance->attendance_date }}
-                                                </td>
+                                                <td>{{ $attendance->attendance_date }}</td>
                                                 <td>{{ $attendance->check_in_time }}</td>
                                                 <td>{{ $attendance->check_out_time }}</td>
                                                 <td>
@@ -107,6 +119,19 @@
                                                         <span class="alert-danger">Incomplete</span>
                                                     @endif
                                                 </td>
+                                                @isset($validated['range'])
+                                                <td>
+                                                    @if (isset($validated['range']) && $attendance->attendance_date && $attendance->check_in_time)
+                                                       @if ($attendance->range($attendance->attendance_date.' '.$attendance->check_in_time, $attendance->course->schedule, $attendance->check_in_time, $validated['range']) == 'On-time')
+                                                           <span class="alert-success">On-time</span>
+                                                       @else
+                                                           <span class="alert-danger">Late</span>
+                                                           
+                                                       @endif
+                                                    
+                                                    @endif                                                    
+                                                </td>
+                                                @endisset
                                             </tr>
                                         @endforeach
                                     @else

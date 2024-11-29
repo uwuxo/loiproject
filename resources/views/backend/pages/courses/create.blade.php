@@ -512,8 +512,8 @@
                     if (!this.checked) {
                         timeInputs.querySelectorAll('input[type="time"]').forEach(input => {
                             input.value = '';
-                            input.classList.remove('is-invalid');
-                            input.nextElementSibling.textContent = '';
+                            //input.classList.remove('is-invalid');
+                            //input.nextElementSibling.textContent = '';
                         });
                     }
                 });

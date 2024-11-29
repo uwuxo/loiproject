@@ -93,7 +93,7 @@
                                         <th width="20%">Course</th>
                                         <th width="10%">Rooms</th>
                                         <th width="10%">Date</th>
-                                        <th width="10%">Check-in Time</th>
+                                        <th width="13%">Check-in Time</th>
                                         <th width="13%">Check-out Time</th>
                                         <th width="5%">Status</th>
                                         @isset($validated['range'])
